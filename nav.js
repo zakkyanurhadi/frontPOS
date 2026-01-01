@@ -43,15 +43,17 @@ function renderNavigation(containerId = 'bottomNav') {
   const currentPage = getCurrentPageId();
   
   const navHTML = `
-    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-card-dark border-t border-gray-200 dark:border-gray-700 pb-safe">
-      <div class="max-w-md mx-auto flex h-16 w-full items-center justify-around px-2">
+    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-card-dark border-t border-gray-200 dark:border-gray-700 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.03)] transition-all">
+      <div class="flex h-20 w-full items-center justify-around px-2">
         ${NAV_ITEMS.map(item => {
           if (item.isCenter) {
-            // Center button (Transaksi)
+            // Center button (Transaksi) - Made larger
             return `
-              <button onclick="navigateTo('${item.href}')" class="relative -top-4 flex size-14 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/40 transition-transform active:scale-95 hover:bg-primary-dark border-4 border-white dark:border-card-dark">
-                <span class="material-symbols-outlined text-[28px]">${item.icon}</span>
-              </button>
+              <div class="relative flex flex-col items-center">
+                <button onclick="navigateTo('${item.href}')" class="relative -top-6 flex size-16 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/40 transition-transform active:scale-95 hover:bg-primary-dark border-[5px] border-white dark:border-card-dark">
+                  <span class="material-symbols-outlined text-[32px]">${item.icon}</span>
+                </button>
+              </div>
             `;
           }
           
@@ -64,9 +66,9 @@ function renderNavigation(containerId = 'bottomNav') {
             : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200';
           
           return `
-            <button onclick="navigateTo('${item.href}')" class="flex flex-col items-center justify-center gap-1 p-2 w-14 group transition-all">
-              <span class="material-symbols-outlined ${iconColor} text-[26px] transition-colors ${isActive ? 'font-variation-settings-fill-1' : ''}">${item.icon}</span>
-              <span class="text-[10px] font-medium ${labelColor} transition-colors">${item.label}</span>
+            <button onclick="navigateTo('${item.href}')" class="flex flex-col items-center justify-center gap-1.5 p-2 w-16 group transition-all">
+              <span class="material-symbols-outlined ${iconColor} text-[28px] transition-colors ${isActive ? 'font-variation-settings-fill-1' : ''}">${item.icon}</span>
+              <span class="text-[11px] font-bold ${labelColor} transition-colors uppercase tracking-tight">${item.label}</span>
             </button>
           `;
         }).join('')}
