@@ -1,5 +1,5 @@
 -- =============================================================================
--- RST POS - DATABASE SCHEMA (v2.1)
+-- RST POS - DATABASE SCHEMA (v2.2)
 -- =============================================================================
 -- Diperbarui: 27 Januari 2026
 -- Berdasarkan analisis prototype frontend POS dengan fitur:
@@ -10,6 +10,7 @@
 --   - Kategori Produk dengan sorting
 --   - Variasi Produk dengan sorting
 --   - Item Tambahan (Add-ons) dengan opsi wajib/opsional
+--   - Registrasi dengan form lengkap + Popup Lengkapi Profil
 -- Database: MySQL / MariaDB
 -- =============================================================================
 
@@ -21,10 +22,12 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    nama_lengkap VARCHAR(255) NOT NULL,
-    nomor_telepon VARCHAR(20) NULL,
+    nama_lengkap VARCHAR(255) NOT NULL COMMENT 'Diisi saat registrasi',
+    nomor_telepon VARCHAR(20) NULL COMMENT 'Diisi via popup Lengkapi Profil',
     foto_profil VARCHAR(500) NULL,
     google_id VARCHAR(255) NULL COMMENT 'Untuk login via Google OAuth',
+    terms_accepted BOOLEAN DEFAULT FALSE COMMENT 'Checkbox Syarat & Ketentuan',
+    profil_completed BOOLEAN DEFAULT FALSE COMMENT 'TRUE jika nomor telepon sudah diisi',
     email_verified_at TIMESTAMP NULL,
     is_active BOOLEAN DEFAULT TRUE,
     last_login_at TIMESTAMP NULL COMMENT 'Waktu login terakhir',
@@ -698,8 +701,8 @@ DELIMITER ;
 -- 
 -- stitch_login/
 -- ├── index.html                   -- Login page
--- ├── register.html                -- Register page
--- ├── lengkapi_profil.html         -- Complete profile
+-- ├── register.html                -- Register page (Nama, Email, Password, Terms)
+-- ├── lengkapi_profil.html         -- Complete profile (popup di daftar_toko)
 -- ├── daftar_toko.html             -- Store list (menampilkan toko owned & shared)
 -- ├── buat_toko.html               -- Create new store
 -- ├── 1home.html                   -- Owner/Admin dashboard
@@ -707,6 +710,7 @@ DELIMITER ;
 -- ├── 3riwayat_transaksi.html      -- Transaction history
 -- ├── 4ringkasan.html              -- Summary/Reports
 -- ├── 5akun.html                   -- Account settings
+-- ├── edit_profil.html             -- Edit profile (Nama, Email readonly, Nomor HP)
 -- ├── buat_transaksi.html          -- Create transaction (owner)
 -- ├── keranjang.html               -- Cart
 -- ├── metode_pembayaran.html       -- Payment method selection
@@ -721,10 +725,11 @@ DELIMITER ;
 --     ├── 1home_kasir.html         -- Kasir dashboard (simplified)
 --     ├── 2riwayat_transaksi_kasir.html -- Transaction history + QR Scanner
 --     ├── 3akun_kasir.html         -- Kasir account
+--     ├── edit_profil.html         -- Edit profile kasir
 --     ├── buat_transaksi_kasir.html -- Create transaction
 --     ├── keranjang_kasir.html     -- Cart
 --     ├── metode_pembayaran_kasir.html -- Payment
---     ├── pengaturan_kasir.html    -- Kasir settings (limited)
+--     ├── pengaturan.html          -- Kasir settings (limited)
 --     └── nav_kasir.js             -- Navigation for kasir (3 menu only)
 --
 -- =============================================================================
@@ -782,5 +787,245 @@ DELIMITER ;
 -- 11. Variasi produk mendukung drag & drop sorting dengan SortableJS
 -- 12. Item Tambahan memiliki struktur Grup > Opsi dengan tipe wajib/opsional
 -- 13. Kategori produk dapat di-edit dan dihapus melalui kategori_produk.html
+-- 
+-- =============================================================================
+-- ALUR REGISTRASI & LENGKAPI PROFIL
+-- =============================================================================
+-- 
+-- 1. User mengisi form registrasi (register.html):
+--    - Nama Lengkap (wajib)
+--    - Email (wajib, validasi format)
+--    - Password (wajib, min 6 karakter)
+--    - Konfirmasi Password (wajib, harus cocok)
+--    - Checkbox Syarat & Ketentuan (wajib dicentang)
+-- 
+-- 2. Setelah submit, user redirect ke daftar_toko.html
+-- 
+-- 3. Di daftar_toko.html, popup "Lengkapi Profil" muncul otomatis:
+--    - Nama Lengkap (readonly, dari registrasi)
+--    - Email (readonly, dari registrasi)
+--    - Nomor WhatsApp/HP (wajib diisi)
+-- 
+-- 4. User bisa:
+--    - Simpan Data: profil_completed = TRUE
+--    - Nanti Saja: popup tidak muncul lagi (skip)
+-- 
+-- 5. Popup hanya muncul 1x setelah registrasi baru
+-- 
+-- =============================================================================
+-- STRUKTUR FOLDER FLUTTER (Implementasi)
+-- =============================================================================
+--rst_pos/
+├── lib/
+│
+│   ├── main.dart
+│   ├── app.dart
+│
+│   ├── core/                         # DIMILIKI TECH LEAD
+│   │   ├── config/
+│   │   │   ├── env.dart
+│   │   │   └── app_config.dart
+│   │   │
+│   │   ├── network/
+│   │   │   ├── api_client.dart
+│   │   │   ├── api_exception.dart
+│   │   │   └── network_info.dart
+│   │   │
+│   │   ├── storage/
+│   │   │   ├── secure_storage.dart
+│   │   │   ├── shared_prefs.dart
+│   │   │   └── hive_db.dart
+│   │   │
+│   │   ├── router/
+│   │   │   ├── app_routes.dart
+│   │   │   └── app_router.dart
+│   │   │
+│   │   ├── theme/
+│   │   │   ├── app_theme.dart
+│   │   │   └── text_styles.dart
+│   │   │
+│   │   ├── utils/
+│   │   │   ├── currency.dart
+│   │   │   ├── datetime.dart
+│   │   │   ├── validators.dart
+│   │   │   └── extensions.dart
+│   │   │
+│   │   └── enums/
+│   │       ├── role_enum.dart
+│   │       ├── payment_enum.dart
+│   │       └── shift_status_enum.dart
+│
+│   ├── shared/                       # DIMILIKI UI/UX DEV
+│   │   ├── widgets/
+│   │   │   ├── buttons/
+│   │   │   ├── forms/
+│   │   │   ├── dialogs/
+│   │   │   ├── cards/
+│   │   │   └── loaders/
+│   │   │
+│   │   └── layouts/
+│   │       ├── owner_layout.dart
+│   │       └── kasir_layout.dart
+│
+│   ├── features/
+│   │
+│   │   ├── auth/                     # DEV 1
+│   │   │   ├── auth_routes.dart
+│   │   │   ├── presentation/
+│   │   │   │   ├── login_screen.dart
+│   │   │   │   ├── register_screen.dart
+│   │   │   │   └── splash_screen.dart
+│   │   │   ├── application/
+│   │   │   │   └── auth_service.dart
+│   │   │   └── data/
+│   │   │       ├── auth_repository.dart
+│   │   │       └── auth_api.dart
+│   │
+│   │   ├── user/                     # DEV 1
+│   │   │   ├── user_routes.dart
+│   │   │   ├── presentation/
+│   │   │   │   └── edit_profile_screen.dart
+│   │   │   ├── application/
+│   │   │   │   └── user_service.dart
+│   │   │   └── data/
+│   │   │       └── user_repository.dart
+│
+│   │   ├── toko/                     # DEV 2
+│   │   │   ├── toko_routes.dart
+│   │   │   ├── presentation/
+│   │   │   │   ├── daftar_toko_screen.dart
+│   │   │   │   └── pengaturan_toko_screen.dart
+│   │   │   ├── application/
+│   │   │   │   └── toko_service.dart
+│   │   │   └── data/
+│   │   │       └── toko_repository.dart
+│
+│   │   ├── produk/                   # DEV 3
+│   │   │   ├── produk_routes.dart
+│   │   │   ├── presentation/
+│   │   │   │   ├── produk_screen.dart
+│   │   │   │   ├── tambah_produk_screen.dart
+│   │   │   │   └── kategori_produk_screen.dart
+│   │   │   ├── application/
+│   │   │   │   ├── produk_service.dart
+│   │   │   │   └── stok_policy.dart
+│   │   │   └── data/
+│   │   │       └── produk_repository.dart
+│
+│   │   ├── add_on/                   # DEV 3
+│   │   │   ├── addon_routes.dart
+│   │   │   ├── presentation/
+│   │   │   │   └── addon_screen.dart
+│   │   │   ├── application/
+│   │   │   │   └── addon_service.dart
+│   │   │   └── data/
+│   │   │       └── addon_repository.dart
+│
+│   │   ├── transaksi/                # DEV 4 & 5 (CORE)
+│   │   │   ├── transaksi_routes.dart
+│   │   │   ├── domain/               # CLEAN ARCHITECTURE DI SINI
+│   │   │   │   ├── entities/
+│   │   │   │   │   ├── transaksi.dart
+│   │   │   │   │   └── cart_item.dart
+│   │   │   │   ├── rules/
+│   │   │   │   │   ├── hitung_total.dart
+│   │   │   │   │   └── validasi_addon.dart
+│   │   │   │   └── policies/
+│   │   │   │       └── payment_policy.dart
+│   │   │   ├── presentation/
+│   │   │   │   ├── buat_transaksi_screen.dart
+│   │   │   │   ├── keranjang_screen.dart
+│   │   │   │   └── metode_pembayaran_screen.dart
+│   │   │   ├── application/
+│   │   │   │   └── transaksi_service.dart
+│   │   │   └── data/
+│   │   │       └── transaksi_repository.dart
+│
+│   │   ├── shift/                    # DEV 5
+│   │   │   ├── shift_routes.dart
+│   │   │   ├── presentation/
+│   │   │   │   ├── buka_shift_screen.dart
+│   │   │   │   └── tutup_shift_screen.dart
+│   │   │   ├── application/
+│   │   │   │   └── shift_service.dart
+│   │   │   └── data/
+│   │   │       └── shift_repository.dart
+│
+│   │   ├── report/                   # DEV 6
+│   │   │   ├── report_routes.dart
+│   │   │   ├── presentation/
+│   │   │   │   ├── ringkasan_screen.dart
+│   │   │   │   └── laporan_shift_screen.dart
+│   │   │   └── application/
+│   │   │       └── report_service.dart
+│
+│   │   ├── notifikasi/               # DEV 7
+│   │   │   ├── notifikasi_routes.dart
+│   │   │   ├── presentation/
+│   │   │   │   └── notifikasi_screen.dart
+│   │   │   ├── application/
+│   │   │   │   └── notifikasi_service.dart
+│   │   │   └── data/
+│   │   │       └── notifikasi_repository.dart
+│
+│   │   └── device/                   # DEV 8
+│   │       ├── device_routes.dart
+│   │       ├── application/
+│   │       │   ├── camera_service.dart
+│   │       │   └── printer_service.dart
+│   │       └── data/
+│   │           └── device_repository.dart
+│
+├── assets/
+├── test/
+│   ├── unit/
+│   └── widget/
+│
+├── pubspec.yaml
+└── README.md
+
+-- 
+-- =============================================================================
+-- FLUTTER DEPENDENCIES (pubspec.yaml)
+-- =============================================================================
+-- 
+-- dependencies:
+--   flutter:
+--     sdk: flutter
+--   
+--   # State Management
+--   flutter_riverpod: ^2.4.9
+--   
+--   # Navigation
+--   go_router: ^13.0.0
+--   
+--   # Network
+--   dio: ^5.4.0
+--   
+--   # Local Storage
+--   shared_preferences: ^2.2.2
+--   flutter_secure_storage: ^9.0.0
+--   hive_flutter: ^1.1.0
+--   
+--   # UI Components
+--   flutter_svg: ^2.0.9
+--   cached_network_image: ^3.3.1
+--   shimmer: ^3.0.0
+--   flutter_slidable: ^3.0.1
+--   reorderable_grid_view: ^2.2.8     # Untuk drag & drop sorting
+--   
+--   # Forms & Validation
+--   reactive_forms: ^16.1.1
+--   
+--   # Camera & QR
+--   mobile_scanner: ^4.0.0            # QR Scanner
+--   image_picker: ^1.0.7
+--   
+--   # Utils
+--   intl: ^0.18.1                     # Date & currency formatting
+--   logger: ^2.0.2
+--   
+--   # Icons
+--   material_symbols_icons: ^4.2719.3
 -- 
 -- =============================================================================
