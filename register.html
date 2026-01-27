@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html class="light" lang="id">
   <head>
     <meta charset="utf-8" />
@@ -44,7 +44,11 @@
     />
     <style>
       .material-symbols-outlined {
-        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
       }
     </style>
     <style>
@@ -82,87 +86,120 @@
         <h2
           class="text-[#1d0c0c] dark:text-white tracking-tight text-[28px] font-bold leading-tight"
         >
-          Buat Akun Baru
+          Registrasi
         </h2>
         <p
           class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal"
         >
-          Daftarkan bisnis Anda sekarang
+          Isilah form dibawah ini dengan benar untuk membuat akun
         </p>
       </div>
-      <form action="#" class="flex flex-col gap-5 w-full mt-2">
-        <div class="flex flex-col gap-2">
-          <label
-            class="text-secondary dark:text-gray-200 text-sm font-semibold pl-1"
-            for="email"
-            >Email</label
+
+      <form id="registerForm" class="flex flex-col gap-4 w-full mt-4">
+        <!-- Nama Lengkap -->
+        <div class="relative">
+          <div
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center"
           >
-          <div class="relative">
-            <input
-              class="form-input flex w-full rounded-lg border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 text-secondary dark:text-white transition-all shadow-sm"
-              id="email"
-              placeholder="masukkan@email.com"
-              type="email"
-              value=""
-            />
-            <div
-              class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center"
-            >
-              <span class="material-symbols-outlined text-[20px]">mail</span>
-            </div>
+            <span class="material-symbols-outlined text-[22px]">person</span>
           </div>
+          <input
+            class="form-input w-full rounded-full border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark focus:border-primary focus:ring-2 focus:ring-primary/20 h-14 pl-12 pr-4 text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 text-secondary dark:text-white transition-all shadow-sm"
+            id="nama_lengkap"
+            placeholder="Nama Lengkap"
+            type="text"
+            required
+          />
         </div>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center pl-1">
-            <label
-              class="text-secondary dark:text-gray-200 text-sm font-semibold"
-              for="password"
-              >Kata Sandi</label
-            >
+
+        <!-- Email -->
+        <div class="relative">
+          <div
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center"
+          >
+            <span class="material-symbols-outlined text-[22px]">mail</span>
           </div>
-          <div class="relative flex w-full">
-            <input
-              class="form-input flex w-full rounded-lg border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 pr-12 text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 text-secondary dark:text-white transition-all shadow-sm"
-              id="password"
-              placeholder="Buat kata sandi"
-              type="password"
-              value=""
-            />
-            <button
-              class="absolute right-0 top-0 h-full w-12 flex items-center justify-center text-gray-400 hover:text-primary transition-colors"
-              type="button"
-            >
-              <span class="material-symbols-outlined text-[20px]"
-                >visibility</span
-              >
-            </button>
-          </div>
+          <input
+            class="form-input w-full rounded-full border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark focus:border-primary focus:ring-2 focus:ring-primary/20 h-14 pl-12 pr-4 text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 text-secondary dark:text-white transition-all shadow-sm"
+            id="email"
+            placeholder="Email"
+            type="email"
+            required
+          />
         </div>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center pl-1">
-            <label
-              class="text-secondary dark:text-gray-200 text-sm font-semibold"
-              for="confirm_password"
-              >Konfirmasi Kata Sandi</label
-            >
+
+        <!-- Password -->
+        <div class="relative">
+          <div
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center"
+          >
+            <span class="material-symbols-outlined text-[22px]">lock</span>
           </div>
-          <div class="relative flex w-full">
-            <input
-              class="form-input flex w-full rounded-lg border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 pr-12 text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 text-secondary dark:text-white transition-all shadow-sm"
-              id="confirm_password"
-              placeholder="Ulangi kata sandi"
-              type="password"
-              value=""
-            />
-            <button
-              class="absolute right-0 top-0 h-full w-12 flex items-center justify-center text-gray-400 hover:text-primary transition-colors"
-              type="button"
+          <input
+            class="form-input w-full rounded-full border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark focus:border-primary focus:ring-2 focus:ring-primary/20 h-14 pl-12 pr-12 text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 text-secondary dark:text-white transition-all shadow-sm"
+            id="password"
+            placeholder="Password"
+            type="password"
+            required
+          />
+          <button
+            class="absolute right-0 top-0 h-full w-12 flex items-center justify-center text-gray-400 hover:text-primary transition-colors"
+            type="button"
+            onclick="togglePassword('password', this)"
+          >
+            <span class="material-symbols-outlined text-[20px]"
+              >visibility</span
             >
-              <span class="material-symbols-outlined text-[20px]"
-                >visibility</span
-              >
-            </button>
+          </button>
+        </div>
+
+        <!-- Konfirmasi Password -->
+        <div class="relative">
+          <div
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center"
+          >
+            <span class="material-symbols-outlined text-[22px]">lock</span>
           </div>
+          <input
+            class="form-input w-full rounded-full border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark focus:border-primary focus:ring-2 focus:ring-primary/20 h-14 pl-12 pr-12 text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 text-secondary dark:text-white transition-all shadow-sm"
+            id="confirm_password"
+            placeholder="Konfirmasi Password"
+            type="password"
+            required
+          />
+          <button
+            class="absolute right-0 top-0 h-full w-12 flex items-center justify-center text-gray-400 hover:text-primary transition-colors"
+            type="button"
+            onclick="togglePassword('confirm_password', this)"
+          >
+            <span class="material-symbols-outlined text-[20px]"
+              >visibility</span
+            >
+          </button>
+        </div>
+
+        <!-- Terms & Conditions Checkbox -->
+        <div class="flex items-start gap-3 mt-2">
+          <input
+            type="checkbox"
+            id="terms"
+            class="w-5 h-5 mt-0.5 rounded border-gray-300 text-primary focus:ring-primary/50 cursor-pointer"
+            required
+          />
+          <label
+            for="terms"
+            class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed cursor-pointer"
+          >
+            Dengan ini saya membaca, memahami, dan menyetujui
+            <a href="#" class="text-primary font-semibold hover:underline"
+              >Syarat & Ketentuan</a
+            >
+            dan
+            <a href="#" class="text-primary font-semibold hover:underline"
+              >Kebijakan Privasi</a
+            >
+            yang berlaku.
+          </label>
         </div>
         <button
           class="w-full bg-primary hover:bg-[#660000] text-white font-bold h-12 rounded-lg shadow-md shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-4"
@@ -221,5 +258,95 @@
       </div>
       <div class="h-6 w-full"></div>
     </div>
+
+    <script>
+      // Toggle password visibility
+      function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+        const icon = button.querySelector("span");
+
+        if (input.type === "password") {
+          input.type = "text";
+          icon.textContent = "visibility_off";
+        } else {
+          input.type = "password";
+          icon.textContent = "visibility";
+        }
+      }
+
+      // Handle form submission
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const namaLengkap = document
+            .getElementById("nama_lengkap")
+            .value.trim();
+          const email = document.getElementById("email").value.trim();
+          const password = document.getElementById("password").value;
+          const confirmPassword =
+            document.getElementById("confirm_password").value;
+          const termsChecked = document.getElementById("terms").checked;
+
+          // Validation
+          if (!namaLengkap) {
+            alert("Mohon masukkan nama lengkap Anda");
+            document.getElementById("nama_lengkap").focus();
+            return;
+          }
+
+          if (!email) {
+            alert("Mohon masukkan email Anda");
+            document.getElementById("email").focus();
+            return;
+          }
+
+          // Email format validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            alert("Format email tidak valid");
+            document.getElementById("email").focus();
+            return;
+          }
+
+          if (!password) {
+            alert("Mohon masukkan password");
+            document.getElementById("password").focus();
+            return;
+          }
+
+          if (password.length < 6) {
+            alert("Password minimal 6 karakter");
+            document.getElementById("password").focus();
+            return;
+          }
+
+          if (password !== confirmPassword) {
+            alert("Konfirmasi password tidak cocok");
+            document.getElementById("confirm_password").focus();
+            return;
+          }
+
+          if (!termsChecked) {
+            alert("Anda harus menyetujui Syarat & Ketentuan untuk melanjutkan");
+            document.getElementById("terms").focus();
+            return;
+          }
+
+          // Set flag for new registration (will trigger profile popup on daftar_toko.html)
+          localStorage.setItem("rst_new_registration", "true");
+          localStorage.removeItem("rst_profil_completed");
+
+          // Store user data temporarily (in real app, this would be API call)
+          localStorage.setItem("rst_user_email", email);
+          localStorage.setItem("rst_user_name", namaLengkap);
+
+          alert("Registrasi berhasil! Silakan lengkapi profil Anda.");
+
+          // Redirect to daftar_toko.html where profile popup will appear
+          window.location.href = "daftar_toko.html";
+        });
+    </script>
   </body>
 </html>

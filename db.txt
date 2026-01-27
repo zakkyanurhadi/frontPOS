@@ -1,5 +1,5 @@
 -- =============================================================================
--- RST POS - DATABASE SCHEMA (v2.0)
+-- RST POS - DATABASE SCHEMA (v2.1)
 -- =============================================================================
 -- Diperbarui: 27 Januari 2026
 -- Berdasarkan analisis prototype frontend POS dengan fitur:
@@ -7,6 +7,9 @@
 --   - Shared Store (toko yang dishare ke kasir)
 --   - Shift Management (tutup shift tanpa logout)
 --   - QR Scanner untuk QRIS
+--   - Kategori Produk dengan sorting
+--   - Variasi Produk dengan sorting
+--   - Item Tambahan (Add-ons) dengan opsi wajib/opsional
 -- Database: MySQL / MariaDB
 -- =============================================================================
 
@@ -56,7 +59,7 @@ CREATE INDEX idx_toko_kode_invite ON toko(kode_invite);
 -- -----------------------------------------------------------------------------
 -- 3. TABEL PENGGUNA TOKO (Multi-user per toko dengan Role)
 -- Berdasarkan: daftar_toko.html (shared icon), pengaturan.html (Daftar Pengguna)
--- UPDATED: Mendukung shared store untuk kasir
+-- Mendukung shared store untuk kasir
 -- -----------------------------------------------------------------------------
 CREATE TABLE pengguna_toko (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -82,24 +85,23 @@ CREATE INDEX idx_pengguna_toko_role ON pengguna_toko(role);
 
 -- -----------------------------------------------------------------------------
 -- 4. TABEL KATEGORI PRODUK
--- Berdasarkan: 2produk.html, tambah_produk.html, buat_transaksi.html
+-- Berdasarkan: kategori_produk.html, tambah_produk.html
+-- Fitur: CRUD kategori dengan sorting
 -- -----------------------------------------------------------------------------
 CREATE TABLE kategori_produk (
     id INT AUTO_INCREMENT PRIMARY KEY,
     toko_id INT NOT NULL,
     nama_kategori VARCHAR(100) NOT NULL,
     deskripsi TEXT NULL,
-    urutan INT DEFAULT 0,
+    urutan INT DEFAULT 0 COMMENT 'Untuk sorting kategori',
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (toko_id) REFERENCES toko(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Insert kategori default
--- INSERT INTO kategori_produk (toko_id, nama_kategori) VALUES 
--- (1, 'Coffee'), (1, 'Tea'), (1, 'Milk Based'), (1, 'Yakult Series'), 
--- (1, 'Makanan'), (1, 'Snack'), (1, 'Lainnya');
+-- Index untuk sorting
+CREATE INDEX idx_kategori_urutan ON kategori_produk(toko_id, urutan);
 
 -- -----------------------------------------------------------------------------
 -- 5. TABEL PRODUK
@@ -119,7 +121,7 @@ CREATE TABLE produk (
     stok INT DEFAULT 0,
     stok_tidak_terbatas BOOLEAN DEFAULT FALSE,
     stok_minimum INT DEFAULT 0 COMMENT 'Alert jika stok di bawah ini',
-    gunakan_variasi BOOLEAN DEFAULT FALSE,
+    gunakan_variasi BOOLEAN DEFAULT FALSE COMMENT 'Toggle variasi di tambah_produk.html',
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -133,48 +135,80 @@ CREATE INDEX idx_produk_kode ON produk(kode_produk);
 CREATE INDEX idx_produk_barcode ON produk(barcode);
 
 -- -----------------------------------------------------------------------------
--- 6. TABEL VARIASI PRODUK (Opsional)
--- Berdasarkan: tambah_produk.html (toggle variasi)
+-- 6. TABEL VARIASI PRODUK
+-- Berdasarkan: tambah_produk.html (toggle variasi, modal urutkan), tambah_variasi.html
+-- Fitur: CRUD variasi dengan sorting (drag & drop menggunakan SortableJS)
 -- -----------------------------------------------------------------------------
 CREATE TABLE variasi_produk (
     id INT AUTO_INCREMENT PRIMARY KEY,
     produk_id INT NOT NULL,
-    nama_variasi VARCHAR(100) NOT NULL COMMENT 'Contoh: Ukuran, Rasa, dll',
-    nilai_variasi VARCHAR(100) NOT NULL COMMENT 'Contoh: S, M, L atau Manis, Sedang',
-    harga_tambahan DECIMAL(15, 2) DEFAULT 0,
+    nama_variasi VARCHAR(100) NOT NULL COMMENT 'Nama variasi, contoh: Americano 2',
+    kode_variasi VARCHAR(50) NULL COMMENT 'Kode unik variasi, contoh: ABC-123',
+    harga_beli DECIMAL(15, 2) DEFAULT 0,
+    harga_jual DECIMAL(15, 2) DEFAULT 0,
     stok INT DEFAULT 0,
+    stok_tidak_terbatas BOOLEAN DEFAULT FALSE COMMENT 'Toggle stok unlimited',
+    urutan INT DEFAULT 0 COMMENT 'Untuk drag & drop sorting',
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (produk_id) REFERENCES produk(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Index untuk sorting variasi
+CREATE INDEX idx_variasi_urutan ON variasi_produk(produk_id, urutan);
+
 -- -----------------------------------------------------------------------------
--- 7. TABEL ITEM TAMBAHAN (Add-ons/Modifiers)
--- Berdasarkan: tambah_produk.html (dropdown item tambahan)
+-- 7. TABEL GRUP ITEM TAMBAHAN (Add-ons Groups)
+-- Berdasarkan: daftar_item_tambahan.html
+-- Contoh: "Topping Es Krim", "Extra Shot", dll
 -- -----------------------------------------------------------------------------
-CREATE TABLE item_tambahan (
+CREATE TABLE grup_item_tambahan (
     id INT AUTO_INCREMENT PRIMARY KEY,
     toko_id INT NOT NULL,
-    nama_item VARCHAR(100) NOT NULL COMMENT 'Contoh: Topping, Extra, Custom Request',
-    harga DECIMAL(15, 2) DEFAULT 0,
+    nama_grup VARCHAR(100) NOT NULL COMMENT 'Nama grup, contoh: Topping Es Krim',
+    deskripsi TEXT NULL COMMENT 'Deskripsi grup',
+    tipe ENUM('opsional', 'wajib') DEFAULT 'opsional' COMMENT 'Badge opsional/wajib',
+    pilih_min INT DEFAULT 0 COMMENT 'Minimum item yang harus dipilih',
+    pilih_max INT DEFAULT 0 COMMENT 'Maximum item yang bisa dipilih',
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (toko_id) REFERENCES toko(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Tabel relasi produk dengan item tambahan
-CREATE TABLE produk_item_tambahan (
+-- -----------------------------------------------------------------------------
+-- 8. TABEL OPSI ITEM TAMBAHAN
+-- Berdasarkan: daftar_item_tambahan.html (modal dengan list opsi)
+-- Opsi dalam setiap grup, contoh: dalam "Topping Es Krim" ada "Oreo", "Choco Chip"
+-- -----------------------------------------------------------------------------
+CREATE TABLE opsi_item_tambahan (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    produk_id INT NOT NULL,
-    item_tambahan_id INT NOT NULL,
-    FOREIGN KEY (produk_id) REFERENCES produk(id) ON DELETE CASCADE,
-    FOREIGN KEY (item_tambahan_id) REFERENCES item_tambahan(id) ON DELETE CASCADE
+    grup_id INT NOT NULL,
+    nama_opsi VARCHAR(100) NOT NULL COMMENT 'Nama opsi, contoh: Oreo, Choco Chip',
+    harga DECIMAL(15, 2) DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (grup_id) REFERENCES grup_item_tambahan(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------------------------------
--- 8. TABEL SHIFT KASIR (UPDATED)
--- Berdasarkan: 1home.html, kasir/1home.html (tombol Tutup Shift)
--- FITUR BARU: Shift management tanpa logout - kembali ke daftar_toko.html
+-- 9. TABEL RELASI PRODUK - GRUP ITEM TAMBAHAN
+-- Untuk menghubungkan produk dengan grup item tambahan yang tersedia
+-- -----------------------------------------------------------------------------
+CREATE TABLE produk_grup_item_tambahan (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    produk_id INT NOT NULL,
+    grup_id INT NOT NULL,
+    FOREIGN KEY (produk_id) REFERENCES produk(id) ON DELETE CASCADE,
+    FOREIGN KEY (grup_id) REFERENCES grup_item_tambahan(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_produk_grup (produk_id, grup_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------------------------------
+-- 10. TABEL SHIFT KASIR
+-- Berdasarkan: 1home.html, kasir/1home_kasir.html (tombol Tutup Shift)
+-- FITUR: Shift management tanpa logout - kembali ke daftar_toko.html
 -- -----------------------------------------------------------------------------
 CREATE TABLE shift_kasir (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -208,10 +242,9 @@ CREATE INDEX idx_shift_status ON shift_kasir(status);
 CREATE INDEX idx_shift_user ON shift_kasir(user_id);
 
 -- -----------------------------------------------------------------------------
--- 9. TABEL TRANSAKSI (Orders/Sales)
+-- 11. TABEL TRANSAKSI (Orders/Sales)
 -- Berdasarkan: 3riwayat_transaksi.html, buat_transaksi.html, keranjang.html, 
 --              metode_pembayaran.html, 1home.html, 4ringkasan.html
--- UPDATED: Ditambahkan referensi ke shift
 -- -----------------------------------------------------------------------------
 CREATE TABLE transaksi (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -248,7 +281,7 @@ CREATE INDEX idx_transaksi_status ON transaksi(status);
 CREATE INDEX idx_transaksi_shift ON transaksi(shift_id);
 
 -- -----------------------------------------------------------------------------
--- 10. TABEL DETAIL TRANSAKSI (Order Items)
+-- 12. TABEL DETAIL TRANSAKSI (Order Items)
 -- Berdasarkan: keranjang.html (item-item dalam keranjang)
 -- -----------------------------------------------------------------------------
 CREATE TABLE detail_transaksi (
@@ -257,6 +290,7 @@ CREATE TABLE detail_transaksi (
     produk_id INT NOT NULL,
     variasi_id INT NULL,
     nama_produk VARCHAR(255) NOT NULL COMMENT 'Snapshot nama produk saat transaksi',
+    nama_variasi VARCHAR(100) NULL COMMENT 'Snapshot nama variasi',
     harga_satuan DECIMAL(15, 2) NOT NULL,
     jumlah INT NOT NULL DEFAULT 1,
     diskon_item DECIMAL(15, 2) DEFAULT 0,
@@ -269,23 +303,24 @@ CREATE TABLE detail_transaksi (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------------------------------
--- 11. TABEL DETAIL ITEM TAMBAHAN TRANSAKSI
+-- 13. TABEL DETAIL TRANSAKSI ITEM TAMBAHAN
 -- Untuk menyimpan add-ons yang dipilih pada setiap item pesanan
 -- -----------------------------------------------------------------------------
 CREATE TABLE detail_transaksi_item_tambahan (
     id INT AUTO_INCREMENT PRIMARY KEY,
     detail_transaksi_id INT NOT NULL,
-    item_tambahan_id INT NOT NULL,
-    nama_item VARCHAR(100) NOT NULL,
+    opsi_id INT NOT NULL,
+    nama_grup VARCHAR(100) NOT NULL COMMENT 'Snapshot nama grup',
+    nama_opsi VARCHAR(100) NOT NULL COMMENT 'Snapshot nama opsi',
     harga DECIMAL(15, 2) NOT NULL,
     jumlah INT DEFAULT 1,
     FOREIGN KEY (detail_transaksi_id) REFERENCES detail_transaksi(id) ON DELETE CASCADE,
-    FOREIGN KEY (item_tambahan_id) REFERENCES item_tambahan(id) ON DELETE RESTRICT
+    FOREIGN KEY (opsi_id) REFERENCES opsi_item_tambahan(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------------------------------
--- 12. TABEL QRIS/PAYMENT SCAN LOG (BARU)
--- Berdasarkan: kasir/2riwayat_transaksi.html (fitur QR Scanner)
+-- 14. TABEL QRIS/PAYMENT SCAN LOG
+-- Berdasarkan: kasir/2riwayat_transaksi_kasir.html (fitur QR Scanner)
 -- -----------------------------------------------------------------------------
 CREATE TABLE qris_scan_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -302,7 +337,7 @@ CREATE TABLE qris_scan_log (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------------------------------
--- 13. TABEL PENGATURAN TOKO
+-- 15. TABEL PENGATURAN TOKO
 -- Berdasarkan: pengaturan.html
 -- -----------------------------------------------------------------------------
 CREATE TABLE pengaturan_toko (
@@ -323,7 +358,7 @@ CREATE TABLE pengaturan_toko (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------------------------------
--- 14. TABEL METODE PEMBAYARAN NON-TUNAI
+-- 16. TABEL METODE PEMBAYARAN NON-TUNAI
 -- Berdasarkan: pengaturan.html (Pembayaran Non-Tunai)
 -- -----------------------------------------------------------------------------
 CREATE TABLE metode_pembayaran (
@@ -340,7 +375,7 @@ CREATE TABLE metode_pembayaran (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------------------------------
--- 15. TABEL NOTIFIKASI
+-- 17. TABEL NOTIFIKASI
 -- Berdasarkan: 1home.html (ikon notifikasi dengan badge)
 -- -----------------------------------------------------------------------------
 CREATE TABLE notifikasi (
@@ -363,7 +398,7 @@ CREATE INDEX idx_notifikasi_user ON notifikasi(user_id);
 CREATE INDEX idx_notifikasi_read ON notifikasi(is_read);
 
 -- -----------------------------------------------------------------------------
--- 16. TABEL BIAYA TRANSAKSI (Service Charges)
+-- 18. TABEL BIAYA TRANSAKSI (Service Charges)
 -- Berdasarkan: pengaturan.html (Biaya Transaksi)
 -- -----------------------------------------------------------------------------
 CREATE TABLE biaya_transaksi (
@@ -378,12 +413,13 @@ CREATE TABLE biaya_transaksi (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------------------------------
--- 17. TABEL LOG STOK (Stock History)
+-- 19. TABEL LOG STOK (Stock History)
 -- Untuk tracking perubahan stok produk
 -- -----------------------------------------------------------------------------
 CREATE TABLE log_stok (
     id INT AUTO_INCREMENT PRIMARY KEY,
     produk_id INT NOT NULL,
+    variasi_id INT NULL COMMENT 'Jika perubahan stok variasi',
     tipe ENUM('masuk', 'keluar', 'adjustment', 'retur') NOT NULL,
     jumlah INT NOT NULL,
     stok_sebelum INT NOT NULL,
@@ -393,12 +429,13 @@ CREATE TABLE log_stok (
     user_id INT NOT NULL COMMENT 'Siapa yang melakukan perubahan',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (produk_id) REFERENCES produk(id) ON DELETE CASCADE,
+    FOREIGN KEY (variasi_id) REFERENCES variasi_produk(id) ON DELETE SET NULL,
     FOREIGN KEY (transaksi_id) REFERENCES transaksi(id) ON DELETE SET NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------------------------------
--- 18. TABEL AKTIVITAS LOG (BARU)
+-- 20. TABEL AKTIVITAS LOG
 -- Untuk tracking aktivitas user di sistem
 -- -----------------------------------------------------------------------------
 CREATE TABLE aktivitas_log (
@@ -470,7 +507,7 @@ FROM transaksi
 WHERE status = 'lunas'
 GROUP BY toko_id, DATE(tanggal_transaksi), metode_pembayaran;
 
--- View: Ringkasan Shift (BARU)
+-- View: Ringkasan Shift
 CREATE VIEW v_ringkasan_shift AS
 SELECT 
     s.id AS shift_id,
@@ -493,7 +530,7 @@ FROM shift_kasir s
 JOIN toko tk ON s.toko_id = tk.id
 JOIN users u ON s.user_id = u.id;
 
--- View: Daftar Toko User dengan Role (BARU)
+-- View: Daftar Toko User dengan Role
 CREATE VIEW v_toko_user AS
 SELECT 
     pt.user_id,
@@ -593,6 +630,29 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Procedure: Update Urutan Variasi (untuk drag & drop sorting)
+DELIMITER //
+CREATE PROCEDURE sp_update_urutan_variasi(
+    IN p_produk_id INT,
+    IN p_variasi_ids JSON
+)
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    DECLARE total_items INT;
+    DECLARE current_id INT;
+    
+    SET total_items = JSON_LENGTH(p_variasi_ids);
+    
+    WHILE i < total_items DO
+        SET current_id = JSON_EXTRACT(p_variasi_ids, CONCAT('$[', i, ']'));
+        UPDATE variasi_produk SET urutan = i WHERE id = current_id AND produk_id = p_produk_id;
+        SET i = i + 1;
+    END WHILE;
+    
+    SELECT 'Urutan berhasil diupdate' AS message;
+END //
+DELIMITER ;
+
 -- =============================================================================
 -- SAMPLE DATA (Opsional - untuk testing)
 -- =============================================================================
@@ -619,53 +679,91 @@ DELIMITER ;
 -- INSERT INTO pengguna_toko (toko_id, user_id, role, is_shared, invited_by, invited_at) VALUES
 -- (2, 2, 'kasir', TRUE, 1, NOW());
 
+-- Sample Kategori Produk
+-- INSERT INTO kategori_produk (toko_id, nama_kategori, urutan) VALUES
+-- (1, 'Coffee', 1),
+-- (1, 'Fresh', 2),
+-- (1, 'Literan', 3),
+-- (1, 'Milk', 4),
+-- (1, 'Signature', 5);
+
+-- Sample Grup Item Tambahan
+-- INSERT INTO grup_item_tambahan (toko_id, nama_grup, deskripsi, tipe, pilih_min, pilih_max) VALUES
+-- (1, 'Topping Es Krim', 'Extra topping untuk minuman', 'opsional', 0, 3),
+-- (1, 'Extra Shot', 'Tambahan espresso shot', 'wajib', 1, 2);
+
 -- =============================================================================
 -- STRUKTUR FOLDER FRONTEND
 -- =============================================================================
 -- 
 -- stitch_login/
--- ├── index.html                 -- Login page
--- ├── register.html              -- Register page
--- ├── lengkapi_profil.html       -- Complete profile
--- ├── daftar_toko.html           -- Store list (menampilkan toko owned & shared)
--- ├── buat_toko.html             -- Create new store
--- ├── 1home.html                 -- Owner/Admin dashboard
--- ├── 2produk.html               -- Product management (owner/admin only)
--- ├── 3riwayat_transaksi.html    -- Transaction history
--- ├── 4ringkasan.html            -- Summary/Reports
--- ├── 5akun.html                 -- Account settings
--- ├── buat_transaksi.html        -- Create transaction (owner)
--- ├── keranjang.html             -- Cart
--- ├── metode_pembayaran.html     -- Payment method selection
--- ├── tambah_produk.html         -- Add new product
--- ├── pengaturan.html            -- Store settings
--- ├── nav.js                     -- Navigation for owner (5 menu)
+-- ├── index.html                   -- Login page
+-- ├── register.html                -- Register page
+-- ├── lengkapi_profil.html         -- Complete profile
+-- ├── daftar_toko.html             -- Store list (menampilkan toko owned & shared)
+-- ├── buat_toko.html               -- Create new store
+-- ├── 1home.html                   -- Owner/Admin dashboard
+-- ├── 2produk.html                 -- Product management (owner/admin only)
+-- ├── 3riwayat_transaksi.html      -- Transaction history
+-- ├── 4ringkasan.html              -- Summary/Reports
+-- ├── 5akun.html                   -- Account settings
+-- ├── buat_transaksi.html          -- Create transaction (owner)
+-- ├── keranjang.html               -- Cart
+-- ├── metode_pembayaran.html       -- Payment method selection
+-- ├── tambah_produk.html           -- Add/Edit product with variasi & item tambahan
+-- ├── tambah_variasi.html          -- Add/Edit variasi with harga & stok
+-- ├── kategori_produk.html         -- CRUD kategori dengan sorting
+-- ├── daftar_item_tambahan.html    -- CRUD item tambahan (grup + opsi)
+-- ├── pengaturan.html              -- Store settings
+-- ├── nav.js                       -- Navigation for owner (5 menu)
 -- │
--- └── kasir/                     -- Kasir-specific pages
---     ├── 1home.html             -- Kasir dashboard (simplified)
---     ├── 2riwayat_transaksi.html -- Transaction history + QR Scanner
---     ├── 3akun.html             -- Kasir account
---     ├── buat_transaksi.html    -- Create transaction
---     ├── keranjang.html         -- Cart
---     ├── metode_pembayaran.html -- Payment
---     ├── pengaturan.html        -- Kasir settings (limited)
---     └── nav_kasir.js           -- Navigation for kasir (3 menu only)
+-- └── kasir/                       -- Kasir-specific pages
+--     ├── 1home_kasir.html         -- Kasir dashboard (simplified)
+--     ├── 2riwayat_transaksi_kasir.html -- Transaction history + QR Scanner
+--     ├── 3akun_kasir.html         -- Kasir account
+--     ├── buat_transaksi_kasir.html -- Create transaction
+--     ├── keranjang_kasir.html     -- Cart
+--     ├── metode_pembayaran_kasir.html -- Payment
+--     ├── pengaturan_kasir.html    -- Kasir settings (limited)
+--     └── nav_kasir.js             -- Navigation for kasir (3 menu only)
 --
 -- =============================================================================
 -- PERBEDAAN ROLE
 -- =============================================================================
 -- 
--- | Fitur              | Owner | Admin | Kasir |
--- |--------------------|-------|-------|-------|
--- | Dashboard          | ✓     | ✓     | ✓     |
--- | Produk             | ✓     | ✓     | ✗     |
--- | Transaksi (Buat)   | ✓     | ✓     | ✓     |
--- | Riwayat Transaksi  | ✓     | ✓     | ✓     |
--- | Ringkasan/Laporan  | ✓     | ✓     | ✗     |
--- | Pengaturan Toko    | ✓     | ✓     | ✗     |
--- | Kelola Pengguna    | ✓     | ✗     | ✗     |
--- | Tutup Shift        | ✓     | ✓     | ✓     |
--- | QR Scanner         | ✓     | ✓     | ✓     |
+-- Owner dan Admin memiliki hak akses yang SAMA.
+-- Perbedaan hanya pada kepemilikan toko (owner_id di tabel toko).
+-- 
+-- | Fitur              | Owner/Admin | Kasir |
+-- |--------------------|-------------|-------|
+-- | Dashboard          | ✓           | ✓     |
+-- | Produk             | ✓           | ✗     |
+-- | Kategori Produk    | ✓           | ✗     |
+-- | Variasi Produk     | ✓           | ✗     |
+-- | Item Tambahan      | ✓           | ✗     |
+-- | Transaksi (Buat)   | ✓           | ✓     |
+-- | Riwayat Transaksi  | ✓           | ✓     |
+-- | Ringkasan/Laporan  | ✓           | ✗     |
+-- | Pengaturan Toko    | ✓           | ✗     |
+-- | Kelola Pengguna    | ✓           | ✗     |
+-- | Tutup Shift        | ✓           | ✓     |
+-- | QR Scanner         | ✓           | ✓     |
+-- 
+-- Catatan Role:
+-- - Owner: Pemilik toko (yang membuat toko). Tercatat di toko.owner_id
+-- - Admin: Pengguna dengan hak akses penuh seperti owner (is_shared=TRUE, role='admin')
+-- - Kasir: Pengguna dengan akses terbatas (is_shared=TRUE, role='kasir')
+-- 
+-- =============================================================================
+-- EXTERNAL LIBRARIES USED
+-- =============================================================================
+-- 
+-- | Library      | Version | Purpose                    | CDN                                      |
+-- |--------------|---------|----------------------------|------------------------------------------|
+-- | TailwindCSS  | 3.x     | CSS Framework              | cdn.tailwindcss.com                      |
+-- | SortableJS   | 1.15.0  | Drag & Drop sorting        | cdn.jsdelivr.net/npm/sortablejs@1.15.0   |
+-- | Material Icons | -     | Icons                      | fonts.googleapis.com/icon                |
+-- | Inter Font   | -       | Typography                 | fonts.googleapis.com/css2                |
 -- 
 -- =============================================================================
 -- NOTES / CATATAN TAMBAHAN
@@ -681,5 +779,8 @@ DELIMITER ;
 -- 8. Kasir yang di-share hanya bisa akses 3 menu: Home, Transaksi, Akun
 -- 9. Tutup Shift tidak logout user, hanya kembali ke daftar_toko.html
 -- 10. QR Scanner menggunakan navigator.mediaDevices.getUserMedia()
+-- 11. Variasi produk mendukung drag & drop sorting dengan SortableJS
+-- 12. Item Tambahan memiliki struktur Grup > Opsi dengan tipe wajib/opsional
+-- 13. Kategori produk dapat di-edit dan dihapus melalui kategori_produk.html
 -- 
 -- =============================================================================

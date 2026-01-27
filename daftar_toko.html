@@ -312,16 +312,234 @@
         <div
           class="absolute bottom-0 inset-x-0 p-4 pb-6 pointer-events-auto flex justify-center"
         >
-          <button
+          <a
+            href="buat_toko.html"
             class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white font-semibold text-[15px] h-14 rounded-2xl shadow-float transition-all active:scale-[0.98] active:shadow-none"
           >
             <span class="material-symbols-outlined">add_business</span>
-            <a href="buat_toko.html">
-              <span>Tambah Toko Baru</span>
-            </a>
-          </button>
+            <span>Tambah Toko Baru</span>
+          </a>
         </div>
       </div>
     </div>
+
+    <!-- Modal Lengkapi Profil (Muncul 1x setelah registrasi) -->
+    <div id="modalLengkapiProfil" class="fixed inset-0 z-[100] hidden">
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
+
+      <!-- Modal Card -->
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div
+          class="w-full max-w-[340px] bg-white dark:bg-[#1a1a1a] rounded-xl shadow-2xl flex flex-col relative overflow-hidden animate-in fade-in zoom-in-95 duration-300"
+        >
+          <!-- Decorative Header Accent -->
+          <div class="absolute top-0 left-0 w-full h-1.5 bg-primary"></div>
+
+          <!-- Content Wrapper -->
+          <div class="px-6 pt-7 pb-6 flex flex-col h-full">
+            <!-- Icon & Title -->
+            <div class="flex flex-col items-center text-center mb-6">
+              <div
+                class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary"
+              >
+                <span class="material-symbols-outlined text-[28px]">badge</span>
+              </div>
+              <h3
+                class="text-gray-800 dark:text-white tracking-tight text-xl font-bold leading-tight"
+              >
+                Lengkapi Profil
+              </h3>
+              <p
+                class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-relaxed mt-2 px-2"
+              >
+                Mohon lengkapi data diri Anda untuk melanjutkan menggunakan
+                aplikasi.
+              </p>
+            </div>
+
+            <!-- Form Fields -->
+            <form id="formLengkapiProfil" class="flex flex-col gap-4 mb-6">
+              <!-- Read-Only Field: Name -->
+              <div class="flex flex-col gap-1.5 opacity-80">
+                <label
+                  class="text-gray-700 dark:text-gray-300 text-xs font-semibold uppercase tracking-wide"
+                  >Nama Lengkap</label
+                >
+                <div class="relative group">
+                  <input
+                    id="inputNama"
+                    class="w-full rounded-lg bg-gray-100 dark:bg-gray-800 border-none text-gray-500 dark:text-gray-400 text-sm font-medium h-12 pl-11 pr-4 cursor-not-allowed select-none focus:ring-0"
+                    disabled
+                    type="text"
+                    value="Budi Santoso"
+                  />
+                  <span
+                    class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]"
+                    >lock</span
+                  >
+                </div>
+              </div>
+
+              <!-- Read-Only Field: Email -->
+              <div class="flex flex-col gap-1.5 opacity-80">
+                <label
+                  class="text-gray-700 dark:text-gray-300 text-xs font-semibold uppercase tracking-wide"
+                  >Email</label
+                >
+                <div class="relative group">
+                  <input
+                    id="inputEmail"
+                    class="w-full rounded-lg bg-gray-100 dark:bg-gray-800 border-none text-gray-500 dark:text-gray-400 text-sm font-medium h-12 pl-11 pr-4 cursor-not-allowed select-none focus:ring-0"
+                    disabled
+                    type="email"
+                    value="budi.santoso@example.com"
+                  />
+                  <span
+                    class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]"
+                    >lock</span
+                  >
+                </div>
+              </div>
+
+              <!-- Active Input Field: Phone -->
+              <div class="flex flex-col gap-1.5 mt-1">
+                <label
+                  class="text-gray-700 dark:text-gray-200 text-xs font-semibold uppercase tracking-wide"
+                  >Nomor WhatsApp / HP</label
+                >
+                <div class="relative group">
+                  <input
+                    id="inputPhone"
+                    autofocus
+                    class="w-full rounded-lg bg-white dark:bg-transparent border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white text-base font-normal h-12 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder:text-gray-400 transition-all shadow-sm"
+                    placeholder="0812..."
+                    type="tel"
+                    required
+                  />
+                  <span
+                    class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors text-[20px]"
+                    >smartphone</span
+                  >
+                </div>
+                <p class="text-[11px] text-gray-500 dark:text-gray-500 mt-0.5">
+                  Wajib diisi untuk verifikasi akun.
+                </p>
+              </div>
+            </form>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3 mt-auto">
+              <button
+                type="button"
+                onclick="skipLengkapiProfil()"
+                class="flex-1 h-11 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 bg-transparent text-gray-700 dark:text-gray-300 text-sm font-bold tracking-[0.015em] hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                Nanti Saja
+              </button>
+              <button
+                type="button"
+                onclick="simpanProfil()"
+                class="flex-1 h-11 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold tracking-[0.015em] hover:bg-primary-hover shadow-md hover:shadow-lg transition-all active:scale-[0.98]"
+              >
+                Simpan Data
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Check if profile needs to be completed (runs once after registration)
+      function checkProfilStatus() {
+        const profilCompleted = localStorage.getItem("rst_profil_completed");
+        const isNewUser = localStorage.getItem("rst_new_registration");
+
+        // Show modal only if:
+        // 1. User just registered (flag exists)
+        // 2. Profile not yet completed
+        if (isNewUser === "true" && profilCompleted !== "true") {
+          populateUserData();
+          showModalLengkapiProfil();
+        }
+      }
+
+      function populateUserData() {
+        // Get user data from localStorage (set during registration)
+        const userName = localStorage.getItem("rst_user_name") || "User";
+        const userEmail =
+          localStorage.getItem("rst_user_email") || "user@example.com";
+
+        // Populate the modal fields
+        document.getElementById("inputNama").value = userName;
+        document.getElementById("inputEmail").value = userEmail;
+      }
+
+      function showModalLengkapiProfil() {
+        document
+          .getElementById("modalLengkapiProfil")
+          .classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+
+        // Focus on phone input
+        setTimeout(() => {
+          document.getElementById("inputPhone").focus();
+        }, 100);
+      }
+
+      function hideModalLengkapiProfil() {
+        document.getElementById("modalLengkapiProfil").classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+
+      function simpanProfil() {
+        const phone = document.getElementById("inputPhone").value.trim();
+
+        if (!phone) {
+          alert("Mohon masukkan nomor WhatsApp/HP Anda");
+          document.getElementById("inputPhone").focus();
+          return;
+        }
+
+        // Validate phone format (simple validation)
+        if (!/^[0-9]{10,15}$/.test(phone.replace(/[^0-9]/g, ""))) {
+          alert("Format nomor telepon tidak valid");
+          document.getElementById("inputPhone").focus();
+          return;
+        }
+
+        // Save to localStorage (in real app, this would be API call)
+        localStorage.setItem("rst_profil_completed", "true");
+        localStorage.setItem("rst_user_phone", phone);
+
+        // Remove new registration flag
+        localStorage.removeItem("rst_new_registration");
+
+        alert("Profil berhasil disimpan!");
+        hideModalLengkapiProfil();
+      }
+
+      function skipLengkapiProfil() {
+        // User chose to skip, but we'll ask again next time
+        // Only remove the new registration flag after they complete it
+        if (
+          confirm(
+            "Anda yakin ingin melewati langkah ini? Anda bisa melengkapi profil nanti di menu Akun.",
+          )
+        ) {
+          // Mark as skipped but not completed - won't show again this session
+          localStorage.setItem("rst_profil_completed", "true");
+          localStorage.removeItem("rst_new_registration");
+          hideModalLengkapiProfil();
+        }
+      }
+
+      // Run on page load
+      document.addEventListener("DOMContentLoaded", checkProfilStatus);
+
+      // For testing: Uncomment line below to simulate new registration
+      // localStorage.setItem('rst_new_registration', 'true'); localStorage.removeItem('rst_profil_completed'); localStorage.setItem('rst_user_name', 'Budi Santoso'); localStorage.setItem('rst_user_email', 'budi@example.com');
+    </script>
   </body>
 </html>
