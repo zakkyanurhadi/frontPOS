@@ -195,9 +195,10 @@
             <button
               id="btnOpenScanner"
               class="relative p-2.5 rounded-xl bg-gradient-to-br from-primary to-primary-dark text-white shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all duration-300 hover:scale-105 active:scale-95"
+              title="Scan Barcode Produk"
             >
               <span class="material-symbols-outlined text-[22px]"
-                >qr_code_scanner</span
+                >barcode_scanner</span
               >
               <!-- Efek pulse -->
               <span
@@ -493,7 +494,7 @@
     <!-- Floating Action Button (FAB) - Di atas navigasi -->
     <div class="fixed bottom-24 right-4 z-50">
       <a
-        href="../kasir/buat_transaksi.html"
+        href="buat_transaksi.html"
         class="flex items-center justify-center gap-2 px-5 py-3 bg-primary text-white rounded-full shadow-xl shadow-primary/40 hover:bg-primary-dark transition-all duration-300 hover:scale-105 active:scale-95 btn-press font-semibold text-sm"
       >
         <span class="material-symbols-outlined text-[20px]">add</span>
@@ -507,7 +508,7 @@
     <!-- Navigation Script -->
     <script src="nav.js"></script>
 
-    <!-- QR Scanner Overlay -->
+    <!-- Barcode Scanner Overlay -->
     <div id="scannerOverlay" class="scanner-overlay">
       <div
         class="w-full px-6 flex justify-between items-center absolute top-0 pt-12 pb-4"
@@ -518,7 +519,7 @@
         >
           <span class="material-symbols-outlined text-[28px]">close</span>
         </button>
-        <h2 class="text-white font-bold text-lg">Scan QRIS</h2>
+        <h2 class="text-white font-bold text-lg">Scan Barcode</h2>
         <button
           id="btnToggleFlash"
           class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
@@ -541,9 +542,9 @@
       </div>
 
       <div class="mt-8 text-center">
-        <p class="text-white/70 text-sm">Arahkan kamera ke kode QR</p>
+        <p class="text-white/70 text-sm">Arahkan kamera ke barcode produk</p>
         <p class="text-white/50 text-xs mt-2">
-          Pastikan QR code berada dalam bingkai
+          Produk akan otomatis ditambahkan ke keranjang
         </p>
       </div>
 
@@ -567,6 +568,19 @@
       const btnCloseScanner = document.getElementById("btnCloseScanner");
       const btnToggleFlash = document.getElementById("btnToggleFlash");
       const btnCaptureScanner = document.getElementById("btnCaptureScanner");
+
+      // Demo: Daftar produk dengan barcode
+      const daftarProduk = [
+        { barcode: "8991234567890", nama: "Nasi Goreng Spesial", harga: 25000 },
+        { barcode: "8997654321098", nama: "Mie Ayam Bakso", harga: 20000 },
+        { barcode: "8998765432109", nama: "Es Teh Manis", harga: 5000 },
+        { barcode: "8999876543210", nama: "Ayam Geprek", harga: 18000 },
+      ];
+
+      // Cari produk berdasarkan barcode
+      function findProductByBarcode(barcode) {
+        return daftarProduk.find((p) => p.barcode === barcode);
+      }
 
       // Open Scanner
       btnOpenScanner.addEventListener("click", async () => {
@@ -624,14 +638,47 @@
         }
       });
 
-      // Capture/Scan Action
+      // Capture/Scan Action - Simulasi scan barcode
       btnCaptureScanner.addEventListener("click", () => {
-        // In a real implementation, you would process the QR code here
-        // For now, we'll just simulate a successful scan
-        alert(
-          "Fitur scan QR akan diimplementasikan dengan library seperti jsQR atau ZXing",
-        );
-        closeScanner();
+        // Simulasi: anggap barcode yang di-scan adalah produk pertama
+        const scannedBarcode = "8991234567890"; // Demo barcode
+        const product = findProductByBarcode(scannedBarcode);
+
+        if (product) {
+          // Simpan produk ke localStorage untuk diambil di halaman buat_transaksi
+          const cartItem = {
+            barcode: product.barcode,
+            nama: product.nama,
+            harga: product.harga,
+            qty: 1,
+            scannedAt: new Date().toISOString(),
+          };
+
+          // Ambil cart yang sudah ada atau buat baru
+          let cart = JSON.parse(localStorage.getItem("rst_scan_cart") || "[]");
+
+          // Cek apakah produk sudah ada di cart
+          const existingIndex = cart.findIndex(
+            (item) => item.barcode === product.barcode,
+          );
+          if (existingIndex >= 0) {
+            cart[existingIndex].qty += 1;
+          } else {
+            cart.push(cartItem);
+          }
+
+          localStorage.setItem("rst_scan_cart", JSON.stringify(cart));
+
+          closeScanner();
+
+          // Tampilkan notifikasi dan redirect
+          alert(`Produk "${product.nama}" ditambahkan ke keranjang!`);
+          window.location.href = "buat_transaksi.html";
+        } else {
+          alert(
+            "Produk tidak ditemukan. Pastikan barcode terdaftar di sistem.",
+          );
+        }
       });
 
       // Close on escape key
