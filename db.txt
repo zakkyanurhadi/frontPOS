@@ -815,177 +815,199 @@ DELIMITER ;
 -- =============================================================================
 -- STRUKTUR FOLDER FLUTTER (Implementasi)
 -- =============================================================================
---
-
-rst_pos/
-├── lib/
-│
-│   ├── main.dart
-│   ├── app.dart
-│
-│   ├── core/                         # DIMILIKI TECH LEAD
-│   │   ├── config/
-│   │   │   ├── env.dart
-│   │   │   └── app_config.dart
-│   │   │
-│   │   ├── network/
-│   │   │   ├── api_client.dart
-│   │   │   ├── api_exception.dart
-│   │   │   └── network_info.dart
-│   │   │
-│   │   ├── storage/
-│   │   │   ├── secure_storage.dart
-│   │   │   ├── shared_prefs.dart
-│   │   │   └── hive_db.dart
-│   │   │
-│   │   ├── router/
-│   │   │   ├── app_routes.dart
-│   │   │   └── app_router.dart
-│   │   │
-│   │   ├── theme/
-│   │   │   ├── app_theme.dart
-│   │   │   └── text_styles.dart
-│   │   │
-│   │   ├── utils/
-│   │   │   ├── currency.dart
-│   │   │   ├── datetime.dart
-│   │   │   ├── validators.dart
-│   │   │   └── extensions.dart
-│   │   │
-│   │   └── enums/
-│   │       ├── role_enum.dart
-│   │       ├── payment_enum.dart
-│   │       └── shift_status_enum.dart
-│
-│   ├── shared/                       # DIMILIKI UI/UX DEV
-│   │   ├── widgets/
-│   │   │   ├── buttons/
-│   │   │   ├── forms/
-│   │   │   ├── dialogs/
-│   │   │   ├── cards/
-│   │   │   └── loaders/
-│   │   │
-│   │   └── layouts/
-│   │       ├── owner_layout.dart
-│   │       └── kasir_layout.dart
-│
-│   ├── features/
-│   │
-│   │   ├── auth/                     # DEV 1
-│   │   │   ├── auth_routes.dart
-│   │   │   ├── presentation/
-│   │   │   │   ├── login_screen.dart
-│   │   │   │   ├── register_screen.dart
-│   │   │   │   └── splash_screen.dart
-│   │   │   ├── application/
-│   │   │   │   └── auth_service.dart
-│   │   │   └── data/
-│   │   │       ├── auth_repository.dart
-│   │   │       └── auth_api.dart
-│   │
-│   │   ├── user/                     # DEV 1
-│   │   │   ├── user_routes.dart
-│   │   │   ├── presentation/
-│   │   │   │   └── edit_profile_screen.dart
-│   │   │   ├── application/
-│   │   │   │   └── user_service.dart
-│   │   │   └── data/
-│   │   │       └── user_repository.dart
-│
-│   │   ├── toko/                     # DEV 2
-│   │   │   ├── toko_routes.dart
-│   │   │   ├── presentation/
-│   │   │   │   ├── daftar_toko_screen.dart
-│   │   │   │   └── pengaturan_toko_screen.dart
-│   │   │   ├── application/
-│   │   │   │   └── toko_service.dart
-│   │   │   └── data/
-│   │   │       └── toko_repository.dart
-│
-│   │   ├── produk/                   # DEV 3
-│   │   │   ├── produk_routes.dart
-│   │   │   ├── presentation/
-│   │   │   │   ├── produk_screen.dart
-│   │   │   │   ├── tambah_produk_screen.dart
-│   │   │   │   └── kategori_produk_screen.dart
-│   │   │   ├── application/
-│   │   │   │   ├── produk_service.dart
-│   │   │   │   └── stok_policy.dart
-│   │   │   └── data/
-│   │   │       └── produk_repository.dart
-│
-│   │   ├── add_on/                   # DEV 3
-│   │   │   ├── addon_routes.dart
-│   │   │   ├── presentation/
-│   │   │   │   └── addon_screen.dart
-│   │   │   ├── application/
-│   │   │   │   └── addon_service.dart
-│   │   │   └── data/
-│   │   │       └── addon_repository.dart
-│
-│   │   ├── transaksi/                # DEV 4 & 5 (CORE)
-│   │   │   ├── transaksi_routes.dart
-│   │   │   ├── domain/               # CLEAN ARCHITECTURE DI SINI
-│   │   │   │   ├── entities/
-│   │   │   │   │   ├── transaksi.dart
-│   │   │   │   │   └── cart_item.dart
-│   │   │   │   ├── rules/
-│   │   │   │   │   ├── hitung_total.dart
-│   │   │   │   │   └── validasi_addon.dart
-│   │   │   │   └── policies/
-│   │   │   │       └── payment_policy.dart
-│   │   │   ├── presentation/
-│   │   │   │   ├── buat_transaksi_screen.dart
-│   │   │   │   ├── keranjang_screen.dart
-│   │   │   │   └── metode_pembayaran_screen.dart
-│   │   │   ├── application/
-│   │   │   │   └── transaksi_service.dart
-│   │   │   └── data/
-│   │   │       └── transaksi_repository.dart
-│
-│   │   ├── shift/                    # DEV 5
-│   │   │   ├── shift_routes.dart
-│   │   │   ├── presentation/
-│   │   │   │   ├── buka_shift_screen.dart
-│   │   │   │   └── tutup_shift_screen.dart
-│   │   │   ├── application/
-│   │   │   │   └── shift_service.dart
-│   │   │   └── data/
-│   │   │       └── shift_repository.dart
-│
-│   │   ├── report/                   # DEV 6
-│   │   │   ├── report_routes.dart
-│   │   │   ├── presentation/
-│   │   │   │   ├── ringkasan_screen.dart
-│   │   │   │   └── laporan_shift_screen.dart
-│   │   │   └── application/
-│   │   │       └── report_service.dart
-│
-│   │   ├── notifikasi/               # DEV 7
-│   │   │   ├── notifikasi_routes.dart
-│   │   │   ├── presentation/
-│   │   │   │   └── notifikasi_screen.dart
-│   │   │   ├── application/
-│   │   │   │   └── notifikasi_service.dart
-│   │   │   └── data/
-│   │   │       └── notifikasi_repository.dart
-│
-│   │   └── device/                   # DEV 8
-│   │       ├── device_routes.dart
-│   │       ├── application/
-│   │       │   ├── camera_service.dart
-│   │       │   └── printer_service.dart
-│   │       └── data/
-│   │           └── device_repository.dart
-│
-├── assets/
-├── test/
-│   ├── unit/
-│   └── widget/
-│
-├── pubspec.yaml
-└── README.md
-
+-- 
+-- Arsitektur: Feature-First + Clean Architecture (untuk fitur core)
+-- Pembagian Tim: Tech Lead, UI/UX Dev, DEV 1-8
+-- 
+-- rst_pos/
+-- ├── lib/
+-- │   │
+-- │   ├── main.dart                         -- Entry point
+-- │   ├── app.dart                          -- MaterialApp configuration
+-- │   │
+-- │   ├── core/                             -- [TECH LEAD] Core utilities
+-- │   │   ├── config/
+-- │   │   │   ├── env.dart                  -- Environment variables
+-- │   │   │   └── app_config.dart           -- App configuration
+-- │   │   │
+-- │   │   ├── network/
+-- │   │   │   ├── api_client.dart           -- Dio HTTP client
+-- │   │   │   ├── api_exception.dart        -- Custom exceptions
+-- │   │   │   └── network_info.dart         -- Connectivity check
+-- │   │   │
+-- │   │   ├── storage/
+-- │   │   │   ├── secure_storage.dart       -- FlutterSecureStorage
+-- │   │   │   ├── shared_prefs.dart         -- SharedPreferences
+-- │   │   │   └── hive_db.dart              -- Offline cache
+-- │   │   │
+-- │   │   ├── router/
+-- │   │   │   ├── app_routes.dart           -- Route names
+-- │   │   │   └── app_router.dart           -- GoRouter setup
+-- │   │   │
+-- │   │   ├── theme/
+-- │   │   │   ├── app_theme.dart            -- Light & Dark theme
+-- │   │   │   └── text_styles.dart          -- Typography
+-- │   │   │
+-- │   │   ├── utils/
+-- │   │   │   ├── currency.dart             -- Currency formatter
+-- │   │   │   ├── datetime.dart             -- Date/time helpers
+-- │   │   │   ├── validators.dart           -- Form validators
+-- │   │   │   └── extensions.dart           -- Dart extensions
+-- │   │   │
+-- │   │   └── enums/
+-- │   │       ├── role_enum.dart            -- owner, admin, kasir
+-- │   │       ├── payment_enum.dart         -- tunai, qris, transfer, dll
+-- │   │       └── shift_status_enum.dart    -- buka, tutup
+-- │   │
+-- │   ├── shared/                           -- [UI/UX DEV] Reusable components
+-- │   │   ├── widgets/
+-- │   │   │   ├── buttons/                  -- AppButton, IconButton, etc
+-- │   │   │   ├── forms/                    -- AppTextField, AppDropdown, etc
+-- │   │   │   ├── dialogs/                  -- ConfirmDialog, AlertDialog
+-- │   │   │   ├── cards/                    -- ProductCard, TokoCard, etc
+-- │   │   │   └── loaders/                  -- Shimmer, CircularIndicator
+-- │   │   │
+-- │   │   └── layouts/
+-- │   │       ├── owner_layout.dart         -- 5-tab layout
+-- │   │       └── kasir_layout.dart         -- 3-tab layout
+-- │   │
+-- │   └── features/                         -- Feature modules
+-- │       │
+-- │       ├── auth/                         -- [DEV 1] Authentication
+-- │       │   ├── auth_routes.dart
+-- │       │   ├── presentation/
+-- │       │   │   ├── login_screen.dart
+-- │       │   │   ├── register_screen.dart
+-- │       │   │   └── splash_screen.dart
+-- │       │   ├── application/
+-- │       │   │   └── auth_service.dart
+-- │       │   └── data/
+-- │       │       ├── auth_repository.dart
+-- │       │       └── auth_api.dart
+-- │       │
+-- │       ├── user/                         -- [DEV 1] User & Profile
+-- │       │   ├── user_routes.dart
+-- │       │   ├── presentation/
+-- │       │   │   └── edit_profile_screen.dart
+-- │       │   ├── application/
+-- │       │   │   └── user_service.dart
+-- │       │   └── data/
+-- │       │       └── user_repository.dart
+-- │       │
+-- │       ├── toko/                         -- [DEV 2] Store Management
+-- │       │   ├── toko_routes.dart
+-- │       │   ├── presentation/
+-- │       │   │   ├── daftar_toko_screen.dart
+-- │       │   │   └── pengaturan_toko_screen.dart
+-- │       │   ├── application/
+-- │       │   │   └── toko_service.dart
+-- │       │   └── data/
+-- │       │       └── toko_repository.dart
+-- │       │
+-- │       ├── produk/                       -- [DEV 3] Product & Category
+-- │       │   ├── produk_routes.dart
+-- │       │   ├── presentation/
+-- │       │   │   ├── produk_screen.dart
+-- │       │   │   ├── tambah_produk_screen.dart
+-- │       │   │   └── kategori_produk_screen.dart
+-- │       │   ├── application/
+-- │       │   │   ├── produk_service.dart
+-- │       │   │   └── stok_policy.dart
+-- │       │   └── data/
+-- │       │       └── produk_repository.dart
+-- │       │
+-- │       ├── add_on/                       -- [DEV 3] Add-on Items
+-- │       │   ├── addon_routes.dart
+-- │       │   ├── presentation/
+-- │       │   │   └── addon_screen.dart
+-- │       │   ├── application/
+-- │       │   │   └── addon_service.dart
+-- │       │   └── data/
+-- │       │       └── addon_repository.dart
+-- │       │
+-- │       ├── transaksi/                    -- [DEV 4 & 5] Transaction (CORE)
+-- │       │   ├── transaksi_routes.dart
+-- │       │   ├── domain/                   -- Clean Architecture layer
+-- │       │   │   ├── entities/
+-- │       │   │   │   ├── transaksi.dart
+-- │       │   │   │   └── cart_item.dart
+-- │       │   │   ├── rules/
+-- │       │   │   │   ├── hitung_total.dart
+-- │       │   │   │   └── validasi_addon.dart
+-- │       │   │   └── policies/
+-- │       │   │       └── payment_policy.dart
+-- │       │   ├── presentation/
+-- │       │   │   ├── buat_transaksi_screen.dart
+-- │       │   │   ├── keranjang_screen.dart
+-- │       │   │   └── metode_pembayaran_screen.dart
+-- │       │   ├── application/
+-- │       │   │   └── transaksi_service.dart
+-- │       │   └── data/
+-- │       │       └── transaksi_repository.dart
+-- │       │
+-- │       ├── shift/                        -- [DEV 5] Shift Management
+-- │       │   ├── shift_routes.dart
+-- │       │   ├── presentation/
+-- │       │   │   ├── buka_shift_screen.dart
+-- │       │   │   └── tutup_shift_screen.dart
+-- │       │   ├── application/
+-- │       │   │   └── shift_service.dart
+-- │       │   └── data/
+-- │       │       └── shift_repository.dart
+-- │       │
+-- │       ├── report/                       -- [DEV 6] Reports & Summary
+-- │       │   ├── report_routes.dart
+-- │       │   ├── presentation/
+-- │       │   │   ├── ringkasan_screen.dart
+-- │       │   │   └── laporan_shift_screen.dart
+-- │       │   └── application/
+-- │       │       └── report_service.dart
+-- │       │
+-- │       ├── notifikasi/                   -- [DEV 7] Notifications
+-- │       │   ├── notifikasi_routes.dart
+-- │       │   ├── presentation/
+-- │       │   │   └── notifikasi_screen.dart
+-- │       │   ├── application/
+-- │       │   │   └── notifikasi_service.dart
+-- │       │   └── data/
+-- │       │       └── notifikasi_repository.dart
+-- │       │
+-- │       └── device/                       -- [DEV 8] Device Features
+-- │           ├── device_routes.dart
+-- │           ├── application/
+-- │           │   ├── camera_service.dart   -- QR Scanner
+-- │           │   └── printer_service.dart  -- Receipt printing
+-- │           └── data/
+-- │               └── device_repository.dart
+-- │
+-- ├── assets/
+-- │   ├── images/
+-- │   ├── icons/
+-- │   └── fonts/
+-- │
+-- ├── test/
+-- │   ├── unit/
+-- │   └── widget/
+-- │
+-- ├── pubspec.yaml
+-- └── README.md
+-- 
+-- =============================================================================
+-- PEMBAGIAN TIM FLUTTER
+-- =============================================================================
+-- 
+-- | Role         | Tanggung Jawab                               | Files               |
+-- |--------------|----------------------------------------------|---------------------|
+-- | Tech Lead    | Core utilities, config, network, router      | lib/core/           |
+-- | UI/UX Dev    | Shared widgets, layouts, components          | lib/shared/         |
+-- | DEV 1        | Auth, User, Profile                          | features/auth, user |
+-- | DEV 2        | Store management                             | features/toko       |
+-- | DEV 3        | Product, Category, Add-on                    | features/produk, addon |
+-- | DEV 4        | Transaction (core logic)                     | features/transaksi  |
+-- | DEV 5        | Transaction (payment), Shift                 | features/transaksi, shift |
+-- | DEV 6        | Reports, Summary                             | features/report     |
+-- | DEV 7        | Notifications                                | features/notifikasi |
+-- | DEV 8        | Device (Camera, Printer)                     | features/device     |
 -- 
 -- =============================================================================
 -- FLUTTER DEPENDENCIES (pubspec.yaml)
@@ -1014,7 +1036,7 @@ rst_pos/
 --   cached_network_image: ^3.3.1
 --   shimmer: ^3.0.0
 --   flutter_slidable: ^3.0.1
---   reorderable_grid_view: ^2.2.8     # Untuk drag & drop sorting
+--   reorderable_grid_view: ^2.2.8     # Drag & drop sorting
 --   
 --   # Forms & Validation
 --   reactive_forms: ^16.1.1
@@ -1031,3 +1053,4 @@ rst_pos/
 --   material_symbols_icons: ^4.2719.3
 -- 
 -- =============================================================================
+
