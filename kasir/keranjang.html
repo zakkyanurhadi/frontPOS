@@ -90,6 +90,87 @@
       .shake {
         animation: shake 0.3s ease-in-out;
       }
+      /* Scanner Overlay */
+      .scanner-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .scanner-overlay.active {
+        display: flex;
+      }
+      .scanner-frame {
+        position: relative;
+        width: 280px;
+        height: 280px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 24px;
+        overflow: hidden;
+      }
+      .scanner-frame::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #800000, transparent);
+        animation: scan 2s linear infinite;
+      }
+      @keyframes scan {
+        0% {
+          top: 0;
+        }
+        50% {
+          top: calc(100% - 3px);
+        }
+        100% {
+          top: 0;
+        }
+      }
+      .scanner-corner {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-color: #800000;
+        border-width: 4px;
+      }
+      .scanner-corner.top-left {
+        top: -2px;
+        left: -2px;
+        border-top-style: solid;
+        border-left-style: solid;
+        border-radius: 12px 0 0 0;
+      }
+      .scanner-corner.top-right {
+        top: -2px;
+        right: -2px;
+        border-top-style: solid;
+        border-right-style: solid;
+        border-radius: 0 12px 0 0;
+      }
+      .scanner-corner.bottom-left {
+        bottom: -2px;
+        left: -2px;
+        border-bottom-style: solid;
+        border-left-style: solid;
+        border-radius: 0 0 0 12px;
+      }
+      .scanner-corner.bottom-right {
+        bottom: -2px;
+        right: -2px;
+        border-bottom-style: solid;
+        border-right-style: solid;
+        border-radius: 0 0 12px 0;
+      }
     </style>
   </head>
   <body
@@ -102,7 +183,7 @@
         <div class="px-4 h-full flex items-center justify-between relative">
           <!-- Tombol Kembali (Kiri) -->
           <a
-            href="buat_transaksi.html"
+            href="../kasir/buat_transaksi.html"
             class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-900 dark:text-white transition-colors z-10"
           >
             <span class="material-symbols-outlined">arrow_back</span>
@@ -125,7 +206,7 @@
         class="bg-background-light dark:bg-background-dark border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm"
       >
         <div class="max-w-md mx-auto px-4 py-3">
-          <!-- Search Bar -->
+          <!-- Search Bar with Scanner -->
           <div
             class="relative group shadow-sm rounded-xl bg-white dark:bg-card-dark border border-gray-200/50 dark:border-gray-700/50"
           >
@@ -139,10 +220,26 @@
             </div>
             <input
               id="searchInput"
-              class="block w-full pl-11 pr-4 py-3 rounded-xl bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm font-medium"
+              class="block w-full pl-11 pr-14 py-3 rounded-xl bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm font-medium"
               placeholder="Cari item di keranjang..."
               type="text"
             />
+            <!-- Scan Barcode Button -->
+            <div class="absolute inset-y-0 right-0 pr-2 flex items-center">
+              <button
+                id="btnOpenScanner"
+                class="relative p-2.5 rounded-xl bg-gradient-to-br from-primary to-primary-dark text-white shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all duration-300 hover:scale-105 active:scale-95"
+                title="Scan Barcode Produk"
+              >
+                <span class="material-symbols-outlined text-[22px]"
+                  >barcode_scanner</span
+                >
+                <!-- Efek pulse -->
+                <span
+                  class="absolute inset-0 rounded-xl bg-primary/20 animate-ping"
+                ></span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -622,6 +719,190 @@
 
       // Initialize
       initCart();
+    </script>
+
+    <!-- Barcode Scanner Overlay -->
+    <div id="scannerOverlay" class="scanner-overlay">
+      <div
+        class="w-full px-6 flex justify-between items-center absolute top-0 pt-12 pb-4"
+      >
+        <button
+          id="btnCloseScanner"
+          class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+        >
+          <span class="material-symbols-outlined text-[28px]">close</span>
+        </button>
+        <h2 class="text-white font-bold text-lg">Scan Barcode</h2>
+        <button
+          id="btnToggleFlash"
+          class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+        >
+          <span class="material-symbols-outlined text-[24px]">flash_off</span>
+        </button>
+      </div>
+
+      <div class="scanner-frame">
+        <video
+          id="cameraPreview"
+          autoplay
+          playsinline
+          class="w-full h-full object-cover"
+        ></video>
+        <div class="scanner-corner top-left"></div>
+        <div class="scanner-corner top-right"></div>
+        <div class="scanner-corner bottom-left"></div>
+        <div class="scanner-corner bottom-right"></div>
+      </div>
+
+      <div class="mt-8 text-center">
+        <p class="text-white/70 text-sm">Arahkan kamera ke barcode produk</p>
+        <p class="text-white/50 text-xs mt-2">
+          Produk akan otomatis ditambahkan ke keranjang
+        </p>
+      </div>
+
+      <div class="absolute bottom-0 w-full pb-12 pt-6 px-6">
+        <div class="text-center text-white/60 text-xs">
+          <span class="material-symbols-outlined text-[16px] align-middle mr-1"
+            >info</span
+          >
+          Scanner otomatis mendeteksi barcode
+        </div>
+      </div>
+    </div>
+
+    <!-- Scanner Script -->
+    <script>
+      let stream = null;
+      let flashEnabled = false;
+      const scannerOverlay = document.getElementById("scannerOverlay");
+      const cameraPreview = document.getElementById("cameraPreview");
+      const btnOpenScanner = document.getElementById("btnOpenScanner");
+      const btnCloseScanner = document.getElementById("btnCloseScanner");
+      const btnToggleFlash = document.getElementById("btnToggleFlash");
+
+      // Demo: Daftar produk dengan barcode (dalam implementasi nyata, fetch dari API)
+      const daftarProduk = [
+        { barcode: "8991234567890", nama: "Nasi Goreng Spesial", harga: 25000 },
+        { barcode: "8997654321098", nama: "Mie Ayam Bakso", harga: 20000 },
+        { barcode: "8998765432109", nama: "Es Teh Manis", harga: 5000 },
+        { barcode: "8999876543210", nama: "Ayam Geprek", harga: 18000 },
+      ];
+
+      // Cari produk berdasarkan barcode
+      function findProductByBarcode(barcode) {
+        return daftarProduk.find((p) => p.barcode === barcode);
+      }
+
+      // Tambah produk dari scan ke keranjang
+      function addScannedProductToCart(product) {
+        const existingIndex = cartItems.findIndex(
+          (item) => item.barcode === product.barcode,
+        );
+
+        if (existingIndex >= 0) {
+          cartItems[existingIndex].qty += 1;
+        } else {
+          cartItems.push({
+            id: Date.now(),
+            barcode: product.barcode,
+            name: product.nama,
+            price: product.harga,
+            qty: 1,
+            notes: "",
+          });
+        }
+
+        saveCart();
+        renderCart();
+        updateTotals();
+      }
+
+      // Open Scanner
+      btnOpenScanner.addEventListener("click", async () => {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: "environment",
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
+            },
+          });
+          cameraPreview.srcObject = stream;
+          scannerOverlay.classList.add("active");
+          document.body.style.overflow = "hidden";
+
+          // Simulasi auto-scan setelah 2 detik (demo)
+          setTimeout(() => {
+            if (scannerOverlay.classList.contains("active")) {
+              simulateScan();
+            }
+          }, 2000);
+        } catch (err) {
+          console.error("Error accessing camera:", err);
+          alert(
+            "Tidak dapat mengakses kamera. Pastikan Anda memberikan izin akses kamera.",
+          );
+        }
+      });
+
+      // Simulasi scan otomatis
+      function simulateScan() {
+        const scannedBarcode = "8991234567890"; // Demo barcode
+        const product = findProductByBarcode(scannedBarcode);
+
+        if (product) {
+          addScannedProductToCart(product);
+          closeScanner();
+
+          // Visual feedback
+          const container = document.getElementById("cartItemsContainer");
+          container.classList.add("shake");
+          setTimeout(() => container.classList.remove("shake"), 300);
+        }
+      }
+
+      // Close Scanner
+      function closeScanner() {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+          stream = null;
+        }
+        cameraPreview.srcObject = null;
+        scannerOverlay.classList.remove("active");
+        document.body.style.overflow = "";
+        flashEnabled = false;
+        btnToggleFlash.querySelector("span").textContent = "flash_off";
+      }
+
+      btnCloseScanner.addEventListener("click", closeScanner);
+
+      // Toggle Flash
+      btnToggleFlash.addEventListener("click", async () => {
+        if (!stream) return;
+
+        const track = stream.getVideoTracks()[0];
+        const capabilities = track.getCapabilities();
+
+        if (capabilities.torch) {
+          flashEnabled = !flashEnabled;
+          await track.applyConstraints({
+            advanced: [{ torch: flashEnabled }],
+          });
+          btnToggleFlash.querySelector("span").textContent = flashEnabled
+            ? "flash_on"
+            : "flash_off";
+        } else {
+          alert("Flash tidak tersedia pada perangkat ini");
+        }
+      });
+
+      // Close on escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && scannerOverlay.classList.contains("active")) {
+          closeScanner();
+        }
+      });
     </script>
   </body>
 </html>
