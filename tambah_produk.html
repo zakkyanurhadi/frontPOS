@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
     <meta charset="utf-8" />
@@ -46,15 +46,18 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-    </style>
-    <style>
       body {
         min-height: max(884px, 100dvh);
       }
-    </style>
-    <style>
-      body {
-        min-height: max(884px, 100dvh);
+      /* Hide native select arrow in all browsers */
+      select.appearance-none {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: none;
+      }
+      select.appearance-none::-ms-expand {
+        display: none;
       }
     </style>
   </head>
@@ -160,11 +163,12 @@
                 <span class="material-icons text-xl">expand_more</span>
               </div>
             </div>
-            <button
+            <a
+              href="kategori_produk.html"
               class="p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-300 hover:text-primary dark:hover:text-red-400 hover:border-primary dark:hover:border-red-400 transition shadow-sm"
             >
               <span class="material-icons text-xl block">open_in_new</span>
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -179,11 +183,118 @@
             >Gunakan Variasi</span
           >
           <label class="relative inline-flex items-center cursor-pointer">
-            <input class="sr-only peer" type="checkbox" value="" />
+            <input
+              id="toggleVariasi"
+              class="sr-only peer"
+              type="checkbox"
+              value=""
+              onchange="toggleVariasiSection()"
+            />
             <div
               class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-100 dark:peer-focus:ring-red-900 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"
             ></div>
           </label>
+        </div>
+
+        <!-- Daftar Variasi (muncul saat toggle aktif) -->
+        <div
+          id="variasiSection"
+          class="hidden mt-5 pt-5 border-t border-gray-100 dark:border-gray-700"
+        >
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-gray-800 dark:text-white">
+              Daftar Variasi
+            </h3>
+            <button
+              onclick="openUrutkanModal()"
+              class="text-sm font-medium text-primary hover:underline"
+            >
+              Urutkan
+            </button>
+          </div>
+
+          <!-- Variasi List -->
+          <div id="variasiList" class="space-y-3">
+            <!-- Sample Variasi Item 1 -->
+            <div
+              class="variasi-item flex items-start justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+            >
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <h4 class="font-medium text-gray-800 dark:text-white">
+                    Americano 2
+                  </h4>
+                  <span
+                    class="material-icons text-primary text-lg"
+                    title="Stok Unlimited"
+                    >all_inclusive</span
+                  >
+                </div>
+                <p class="text-sm text-primary font-medium mt-0.5">Rp 8.000</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  hshshsh
+                </p>
+              </div>
+              <div class="flex items-center gap-1">
+                <button
+                  class="p-1.5 text-gray-400 hover:text-primary transition"
+                  onclick="editVariasi('Americano 2')"
+                >
+                  <span class="material-icons text-xl">edit</span>
+                </button>
+                <button
+                  class="p-1.5 text-gray-400 hover:text-red-500 transition"
+                  onclick="deleteVariasi('Americano 2')"
+                >
+                  <span class="material-icons text-xl">delete</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Sample Variasi Item 2 -->
+            <div
+              class="variasi-item flex items-start justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+            >
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <h4 class="font-medium text-gray-800 dark:text-white">Apa</h4>
+                  <span
+                    class="material-icons text-primary text-lg"
+                    title="Stok Unlimited"
+                    >all_inclusive</span
+                  >
+                </div>
+                <p class="text-sm text-primary font-medium mt-0.5">Rp 5.000</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  shhshgs
+                </p>
+              </div>
+              <div class="flex items-center gap-1">
+                <button
+                  class="p-1.5 text-gray-400 hover:text-primary transition"
+                  onclick="editVariasi('Apa')"
+                >
+                  <span class="material-icons text-xl">edit</span>
+                </button>
+                <button
+                  class="p-1.5 text-gray-400 hover:text-red-500 transition"
+                  onclick="deleteVariasi('Apa')"
+                >
+                  <span class="material-icons text-xl">delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tambah Variasi Button -->
+          <a
+            href="tambah_variasi.html"
+            class="mt-4 w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-primary font-medium hover:border-primary hover:bg-primary/5 transition"
+          >
+            <span class="material-icons">add</span>
+            Tambah Variasi
+          </a>
         </div>
       </section>
       <section
@@ -296,11 +407,12 @@
                 <span class="material-icons text-xl">expand_more</span>
               </div>
             </div>
-            <button
+            <a
+              href="daftar_item_tambahan.html"
               class="p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-300 hover:text-primary dark:hover:text-red-400 hover:border-primary dark:hover:border-red-400 transition shadow-sm"
             >
               <span class="material-icons text-xl block">open_in_new</span>
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -321,5 +433,156 @@
         </button>
       </div>
     </footer>
+
+    <!-- Modal Urutkan Variasi -->
+    <div id="urutkanModal" class="fixed inset-0 z-50 hidden">
+      <div
+        class="absolute inset-0 bg-black/50"
+        onclick="closeUrutkanModal()"
+      ></div>
+      <div
+        class="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-3xl p-6 transform transition-transform duration-300"
+      >
+        <!-- Handle Bar -->
+        <div
+          class="w-12 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4"
+        ></div>
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-bold text-gray-800 dark:text-white">
+            Urutkan Variasi
+          </h3>
+          <button
+            onclick="closeUrutkanModal()"
+            class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          >
+            <span class="material-icons text-2xl">close</span>
+          </button>
+        </div>
+
+        <!-- Sortable List -->
+        <div id="sortableList" class="space-y-3 mb-6">
+          <!-- Item 1 -->
+          <div
+            class="sort-item flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600"
+          >
+            <span
+              class="drag-handle text-gray-400 dark:text-gray-500 flex-shrink-0 cursor-move"
+            >
+              <span class="material-icons">drag_indicator</span>
+            </span>
+            <span
+              class="item-name flex-1 font-medium text-gray-800 dark:text-white"
+              >Apa</span
+            >
+            <span class="material-icons text-primary text-lg"
+              >all_inclusive</span
+            >
+          </div>
+
+          <!-- Item 2 -->
+          <div
+            class="sort-item flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600"
+          >
+            <span
+              class="drag-handle text-gray-400 dark:text-gray-500 flex-shrink-0 cursor-move"
+            >
+              <span class="material-icons">drag_indicator</span>
+            </span>
+            <span
+              class="item-name flex-1 font-medium text-gray-800 dark:text-white"
+              >Americano 2</span
+            >
+            <span class="material-icons text-primary text-lg"
+              >all_inclusive</span
+            >
+          </div>
+        </div>
+
+        <!-- Simpan Button -->
+        <button
+          onclick="saveUrutan()"
+          class="w-full bg-primary text-white font-semibold py-4 px-4 rounded-xl shadow-lg shadow-primary/30 hover:brightness-110 active:scale-[0.98] transition"
+        >
+          Simpan
+        </button>
+      </div>
+    </div>
+
+    <!-- SortableJS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <!-- JavaScript for Variasi Toggle and Sorting -->
+    <script>
+      function toggleVariasiSection() {
+        const toggle = document.getElementById("toggleVariasi");
+        const section = document.getElementById("variasiSection");
+
+        if (toggle.checked) {
+          section.classList.remove("hidden");
+        } else {
+          section.classList.add("hidden");
+        }
+      }
+
+      function editVariasi(name) {
+        window.location.href =
+          "tambah_variasi.html?edit=" + encodeURIComponent(name);
+      }
+
+      function deleteVariasi(name) {
+        if (
+          confirm('Apakah Anda yakin ingin menghapus variasi "' + name + '"?')
+        ) {
+          alert('Variasi "' + name + '" berhasil dihapus');
+        }
+      }
+
+      // Urutkan Modal Functions
+      let sortableInstance = null;
+
+      function openUrutkanModal() {
+        document.getElementById("urutkanModal").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+
+        // Initialize Sortable
+        const sortableList = document.getElementById("sortableList");
+        if (sortableInstance) {
+          sortableInstance.destroy();
+        }
+
+        sortableInstance = new Sortable(sortableList, {
+          animation: 150,
+          ghostClass: "opacity-50",
+          chosenClass: "bg-primary/10",
+          dragClass: "shadow-lg",
+          handle: ".drag-handle",
+          onStart: function (evt) {
+            evt.item.classList.add("scale-95");
+          },
+          onEnd: function (evt) {
+            evt.item.classList.remove("scale-95");
+          },
+        });
+      }
+
+      function closeUrutkanModal() {
+        document.getElementById("urutkanModal").classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+
+      function saveUrutan() {
+        const items = document.querySelectorAll("#sortableList .sort-item");
+        const order = [];
+        items.forEach((item, index) => {
+          const name = item.querySelector(".item-name").textContent.trim();
+          order.push({ position: index + 1, name: name });
+        });
+        console.log("New order:", order);
+        alert("Urutan berhasil disimpan!");
+        closeUrutkanModal();
+      }
+    </script>
   </body>
 </html>

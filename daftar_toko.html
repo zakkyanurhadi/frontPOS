@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html class="light" lang="id">
   <head>
@@ -58,7 +58,11 @@
     </script>
     <style>
       .material-symbols-outlined {
-        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
       }
       .hide-scrollbar::-webkit-scrollbar {
         display: none;
@@ -120,8 +124,9 @@
       </div>
       <!-- Store List Section -->
       <div class="flex flex-col gap-4">
-        <!-- Store Item 1 -->
-        <div
+        <!-- Store Item 1 - OWNER -->
+        <a
+          href="1home.html"
           class="group relative flex items-center bg-surface-light dark:bg-surface-dark p-4 rounded-xl shadow-card active:scale-[0.98] transition-all duration-200 cursor-pointer overflow-hidden border border-transparent hover:border-primary/10"
         >
           <!-- Image -->
@@ -163,10 +168,11 @@
           <div class="ml-2 shrink-0 text-gray-400 dark:text-gray-600">
             <span class="material-symbols-outlined">chevron_right</span>
           </div>
-        </div>
-        <!-- Store Item 2 -->
-        <div
-          class="group relative flex items-center bg-surface-light dark:bg-surface-dark p-4 rounded-xl shadow-card active:scale-[0.98] transition-all duration-200 cursor-pointer overflow-hidden border border-transparent hover:border-primary/10"
+        </a>
+        <!-- Store Item 2 - SHARED (Kasir Role) -->
+        <a
+          href="kasir/1home.html"
+          class="group relative flex items-center bg-surface-light dark:bg-surface-dark p-4 rounded-xl shadow-card active:scale-[0.98] transition-all duration-200 cursor-pointer overflow-hidden border border-transparent hover:border-blue-400/30"
         >
           <div
             class="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100"
@@ -191,20 +197,33 @@
                 Tutup
               </span>
             </div>
-            <p class="mt-1 text-sm text-text-secondary truncate">
-              Jl. Sudirman Kav 5, Jakarta Selatan
+            <p
+              class="mt-1 text-sm text-text-secondary truncate flex items-center gap-1.5"
+            >
+              <!-- Shared Icon -->
+              <span
+                class="inline-flex items-center justify-center w-5 h-5 rounded bg-blue-100 dark:bg-blue-900/30"
+              >
+                <span
+                  class="material-symbols-outlined text-[14px] text-blue-500"
+                  >share</span
+                >
+              </span>
+              <span>Jl. Sudirman Kav 5, Jakarta Selatan</span>
             </p>
             <div class="mt-1.5 flex items-center gap-1">
               <span class="material-symbols-outlined text-[14px] text-gray-400"
                 >coffee</span
               >
               <span class="text-xs text-text-secondary">F&amp;B</span>
+              <span class="mx-1 text-gray-300">•</span>
+              <span class="text-xs text-blue-500 font-medium">Kasir</span>
             </div>
           </div>
           <div class="ml-2 shrink-0 text-gray-400 dark:text-gray-600">
             <span class="material-symbols-outlined">chevron_right</span>
           </div>
-        </div>
+        </a>
         <!-- Store Item 3 -->
         <div
           class="group relative flex items-center bg-surface-light dark:bg-surface-dark p-4 rounded-xl shadow-card active:scale-[0.98] transition-all duration-200 cursor-pointer overflow-hidden border border-transparent hover:border-primary/10"

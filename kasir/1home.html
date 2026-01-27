@@ -202,7 +202,7 @@
         </h3>
         <div class="grid grid-cols-2 gap-3">
           <a
-            href="buat_transaksi.html"
+            href="buat_transaksi_kasir.html"
             class="col-span-2 group relative flex items-center justify-between overflow-hidden rounded-xl bg-primary p-4 shadow-md transition-all active:scale-[0.98]"
           >
             <div class="relative z-10 flex flex-col items-start text-left">
@@ -218,22 +218,10 @@
               class="absolute -right-4 -bottom-4 size-24 rounded-full bg-white/10 blur-xl"
             ></div>
           </a>
-          <a
-            href="tambah_produk.html"
-            class="flex flex-col items-center justify-center gap-2 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition-colors"
-          >
-            <div
-              class="flex size-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-            >
-              <span class="material-symbols-outlined">add_box</span>
-            </div>
-            <span class="text-sm font-semibold text-gray-700 dark:text-gray-200"
-              >Tambah Produk</span
-            >
-          </a>
+
           <button
             onclick="tutupShift()"
-            class="flex flex-col items-center justify-center gap-2 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition-colors"
+            class="col-span-2 flex flex-col items-center justify-center gap-2 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition-colors"
           >
             <div
               class="flex size-10 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400"
@@ -241,7 +229,7 @@
               <span class="material-symbols-outlined">power_settings_new</span>
             </div>
             <span class="text-sm font-semibold text-gray-700 dark:text-gray-200"
-              >Tutup Shift</span
+              >Tutup Shift & Keluar</span
             >
           </button>
         </div>
@@ -286,22 +274,23 @@
     <div id="bottomNav"></div>
 
     <!-- Navigation Script -->
-    <script src="nav.js"></script>
+    <script src="nav_kasir.js"></script>
 
     <!-- Tutup Shift Script -->
     <script>
       function tutupShift() {
         if (
           confirm(
-            "Apakah Anda yakin ingin menutup shift dan keluar dari toko ini?",
+            "Apakah Anda yakin ingin menutup shift dan keluar dari aplikasi?",
           )
         ) {
-          // Simulasi close shift - dalam implementasi nyata ini akan menyimpan data shift
+          // Simulasi close app - dalam implementasi nyata ini akan memanggil native app close
           alert(
             "Shift berhasil ditutup.\nTerima kasih telah menggunakan RST POS!",
           );
-          // Redirect ke halaman daftar toko
-          window.location.href = "daftar_toko.html";
+          // Untuk web, redirect ke halaman daftar toko
+          // Untuk native app (seperti dengan Capacitor/Cordova), gunakan: navigator.app.exitApp()
+          window.location.href = "../daftar_toko.html";
         }
       }
     </script>
