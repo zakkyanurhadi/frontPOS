@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Buat Toko - RST POS</title>
+    <title>Buat Toko - AIPOS</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
@@ -24,7 +24,7 @@
         theme: {
           extend: {
             colors: {
-              primary: "#800000",
+              primary: "#2563ea",
               secondary: "#333333",
               "background-light": "#f8f5f5",
               "background-dark": "#230f0f",
@@ -58,8 +58,8 @@
       }
       /* Custom checkbox style for iOS feel */
       .custom-checkbox:checked {
-        background-color: #800000;
-        border-color: #800000;
+        background-color: #2563ea;
+        border-color: #2563ea;
       }
     </style>
     <style>
@@ -306,7 +306,7 @@
             <a class="text-primary font-semibold hover:underline" href="#"
               >Syarat &amp; Ketentuan</a
             >
-            Layanan RST POS.
+            Layanan AIPOS.
           </p>
         </label>
         <!-- Primary Action Button -->
@@ -378,7 +378,7 @@
           icon.parentElement.addEventListener("click", function () {
             const isFav = icon.innerText === "favorite";
             icon.innerText = isFav ? "favorite_border" : "favorite";
-            icon.classList.toggle("text-red-500", !isFav);
+            icon.classList.toggle("text-blue-500", !isFav);
 
             // Pop animation
             icon.style.transform = "scale(1.3)";
@@ -437,3 +437,4 @@
     </script>
   </body>
 </html>
+

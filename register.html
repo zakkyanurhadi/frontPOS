@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>RST POS Registrasi</title>
+    <title>AIPOS Registrasi</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
       rel="stylesheet"
@@ -15,7 +15,7 @@
         theme: {
           extend: {
             colors: {
-              primary: "#800000",
+              primary: "#2563ea",
               secondary: "#333333",
               "background-light": "#f8f5f5",
               "background-dark": "#230f0f",
@@ -76,9 +76,9 @@
         </div>
         <div class="text-center">
           <h1
-            class="text-2xl font-bold tracking-tight text-primary dark:text-red-400"
+            class="text-2xl font-bold tracking-tight text-primary dark:text-blue-400"
           >
-            RST POS
+            AIPOS
           </h1>
         </div>
       </div>
@@ -202,7 +202,7 @@
           </label>
         </div>
         <button
-          class="w-full bg-primary hover:bg-[#660000] text-white font-bold h-12 rounded-lg shadow-md shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-4"
+          class="w-full bg-primary hover:bg-[#1d4ed8] text-white font-bold h-12 rounded-lg shadow-md shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-4"
         >
           <span>Daftar</span>
           <span class="material-symbols-outlined text-[20px]">person_add</span>
@@ -250,7 +250,7 @@
         <p class="text-sm text-gray-500 dark:text-gray-400">
           Sudah punya akun?
           <a
-            class="font-bold text-primary dark:text-red-400 hover:underline"
+            class="font-bold text-primary dark:text-blue-400 hover:underline"
             href="index.html"
             >Masuk Disini</a
           >
@@ -335,12 +335,12 @@
           }
 
           // Set flag for new registration (will trigger profile popup on daftar_toko.html)
-          localStorage.setItem("rst_new_registration", "true");
-          localStorage.removeItem("rst_profil_completed");
+          localStorage.setItem("aipos_new_registration", "true");
+          localStorage.removeItem("aipos_profil_completed");
 
           // Store user data temporarily (in real app, this would be API call)
-          localStorage.setItem("rst_user_email", email);
-          localStorage.setItem("rst_user_name", namaLengkap);
+          localStorage.setItem("aipos_user_email", email);
+          localStorage.setItem("aipos_user_name", namaLengkap);
 
           alert("Registrasi berhasil! Silakan lengkapi profil Anda.");
 
@@ -350,3 +350,5 @@
     </script>
   </body>
 </html>
+
+

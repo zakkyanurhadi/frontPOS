@@ -1,5 +1,5 @@
 /**
- * RST POS - Navigation Component
+ * AIPOS - Navigation Component
  * Simple JavaScript routing for bottom navigation
  */
 
@@ -87,3 +87,4 @@ document.addEventListener('DOMContentLoaded', () => {
     renderNavigation();
   }
 });
+

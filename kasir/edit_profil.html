@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Edit Profil - RST POS</title>
+    <title>Edit Profil - AIPOS</title>
     <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -22,7 +22,7 @@
         theme: {
           extend: {
             colors: {
-              primary: "#800000",
+              primary: "#2563ea",
               "primary-hover": "#600000",
               secondary: "#333333",
               "background-light": "#F5F5F5",
@@ -101,7 +101,7 @@
         <!-- Nama -->
         <div class="flex flex-col gap-1.5">
           <label class="text-secondary dark:text-gray-300 text-sm font-medium">
-            Nama <span class="text-red-500">*</span>
+            Nama <span class="text-blue-500">*</span>
           </label>
           <div class="relative">
             <div
@@ -143,7 +143,7 @@
         <!-- Nomor HP -->
         <div class="flex flex-col gap-1.5">
           <label class="text-secondary dark:text-gray-300 text-sm font-medium">
-            Nomor HP <span class="text-red-500">*</span>
+            Nomor HP <span class="text-blue-500">*</span>
           </label>
           <div class="relative">
             <div
@@ -224,8 +224,8 @@
           }
 
           // Save to localStorage (in real app, this would be API call)
-          localStorage.setItem("rst_user_name", nama);
-          localStorage.setItem("rst_user_phone", nomorHp);
+          localStorage.setItem("aipos_user_name", nama);
+          localStorage.setItem("aipos_user_phone", nomorHp);
 
           alert("Profil berhasil disimpan!");
           window.location.href = "3akun.html";
@@ -233,9 +233,9 @@
 
       // Load user data from localStorage on page load
       document.addEventListener("DOMContentLoaded", function () {
-        const savedName = localStorage.getItem("rst_user_name");
-        const savedEmail = localStorage.getItem("rst_user_email");
-        const savedPhone = localStorage.getItem("rst_user_phone");
+        const savedName = localStorage.getItem("aipos_user_name");
+        const savedEmail = localStorage.getItem("aipos_user_email");
+        const savedPhone = localStorage.getItem("aipos_user_phone");
 
         if (savedName) document.getElementById("nama").value = savedName;
         if (savedEmail) document.getElementById("email").value = savedEmail;
@@ -244,3 +244,5 @@
     </script>
   </body>
 </html>
+
+

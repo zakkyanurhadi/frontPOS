@@ -1,5 +1,5 @@
 /**
- * RST POS - Navigation Component for Kasir Role
+ * AIPOS - Navigation Component for Kasir Role
  * Simple JavaScript routing for bottom navigation
  */
 
@@ -85,3 +85,4 @@ document.addEventListener('DOMContentLoaded', () => {
     renderNavigation();
   }
 });
+

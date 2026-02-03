@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>RST POS - Riwayat Transaksi</title>
+    <title>AIPOS - Riwayat Transaksi</title>
     <!-- Google Fonts: Inter -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
@@ -28,7 +28,7 @@
         theme: {
           extend: {
             colors: {
-              primary: "#800000",
+              primary: "#2563ea",
               "primary-dark": "#5c0000",
               "background-light": "#f8f6f6",
               "background-dark": "#221010",
@@ -99,7 +99,7 @@
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(90deg, transparent, #800000, transparent);
+        background: linear-gradient(90deg, transparent, #2563ea, transparent);
         animation: scan 2s linear infinite;
       }
       @keyframes scan {
@@ -117,7 +117,7 @@
         position: absolute;
         width: 30px;
         height: 30px;
-        border-color: #800000;
+        border-color: #2563ea;
         border-width: 4px;
       }
       .scanner-corner.top-left {
@@ -367,12 +367,12 @@
         >
           <!-- Status Stripe -->
           <div
-            class="absolute left-0 top-0 bottom-0 w-1.5 bg-red-500 rounded-l-2xl"
+            class="absolute left-0 top-0 bottom-0 w-1.5 bg-blue-500 rounded-l-2xl"
           ></div>
           <div class="flex justify-between items-start pl-2">
             <div class="flex gap-3">
               <div
-                class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500 dark:text-red-400 shrink-0"
+                class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-500 dark:text-blue-400 shrink-0"
               >
                 <span class="material-symbols-outlined">close</span>
               </div>
@@ -390,7 +390,7 @@
             </div>
             <div class="flex flex-col items-end gap-1">
               <span
-                class="px-2.5 py-1 rounded-full bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-300 text-xs font-semibold"
+                class="px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 text-xs font-semibold"
               >
                 Gagal
               </span>
@@ -464,9 +464,9 @@
             class="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4 relative"
           >
             <div
-              class="absolute -top-1 -right-1 w-6 h-6 bg-red-100 rounded-full flex items-center justify-center"
+              class="absolute -top-1 -right-1 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center"
             >
-              <span class="material-symbols-outlined text-red-500 text-sm"
+              <span class="material-symbols-outlined text-blue-500 text-sm"
                 >priority_high</span
               >
             </div>
@@ -655,7 +655,7 @@
           };
 
           // Ambil cart yang sudah ada atau buat baru
-          let cart = JSON.parse(localStorage.getItem("rst_scan_cart") || "[]");
+          let cart = JSON.parse(localStorage.getItem("aipos_scan_cart") || "[]");
 
           // Cek apakah produk sudah ada di cart
           const existingIndex = cart.findIndex(
@@ -667,7 +667,7 @@
             cart.push(cartItem);
           }
 
-          localStorage.setItem("rst_scan_cart", JSON.stringify(cart));
+          localStorage.setItem("aipos_scan_cart", JSON.stringify(cart));
 
           closeScanner();
 
@@ -690,3 +690,5 @@
     </script>
   </body>
 </html>
+
+

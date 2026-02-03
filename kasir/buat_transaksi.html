@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>RST POS - Buat Transaksi</title>
+    <title>AIPOS - Buat Transaksi</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -19,8 +19,8 @@
         theme: {
           extend: {
             colors: {
-              primary: "#800000",
-              "primary-dark": "#5e0000",
+              primary: "#2563ea",
+              "primary-dark": "#1e40af",
               secondary: "#333333",
               "background-light": "#f8f6f6",
               "background-dark": "#1a1a1a",
@@ -326,7 +326,7 @@
               />
               <div class="absolute top-2 right-2 bg-white/90 dark:bg-black/60 backdrop-blur px-1.5 py-0.5 rounded-md text-[10px] font-bold ${
                 isOutOfStock
-                  ? "text-red-500"
+                  ? "text-blue-500"
                   : "text-gray-700 dark:text-gray-300"
               }">
                 ${isOutOfStock ? "Habis" : "Stok: " + product.stock}
@@ -360,7 +360,7 @@
                     : cartQty > 0
                       ? `
                   <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5">
-                    <button onclick="removeFromCart(${product.id})" class="w-7 h-7 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 shadow-sm text-gray-600 dark:text-gray-300 active:scale-95 transition-transform border border-gray-200 dark:border-gray-600 hover:text-red-500 hover:border-red-300">
+                    <button onclick="removeFromCart(${product.id})" class="w-7 h-7 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 shadow-sm text-gray-600 dark:text-gray-300 active:scale-95 transition-transform border border-gray-200 dark:border-gray-600 hover:text-blue-500 hover:border-blue-300">
                       <span class="material-symbols-outlined text-[16px]">remove</span>
                     </button>
                     <span class="font-bold text-gray-900 dark:text-white w-6 text-center text-sm tabular-nums">${cartQty}</span>
@@ -553,3 +553,4 @@
     </script>
   </body>
 </html>
+

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>RST POS - Pembayaran</title>
+    <title>AIPOS - Pembayaran</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -19,8 +19,8 @@
         theme: {
           extend: {
             colors: {
-              primary: "#800000",
-              "primary-dark": "#5e0000",
+              primary: "#2563ea",
+              "primary-dark": "#1e40af",
               secondary: "#333333",
               "background-light": "#f8f6f6",
               "background-dark": "#1a1a1a",
@@ -138,7 +138,7 @@
             <span class="material-symbols-outlined text-[14px]"
               >receipt_long</span
             >
-            <span id="orderNumber">Order #RST-8821</span>
+            <span id="orderNumber">Order #AIPOS-8821</span>
           </div>
         </div>
       </div>
@@ -381,7 +381,7 @@
       let selectedMethod = "tunai";
 
       // Generate random order number
-      const orderNumber = "RST-" + Math.floor(1000 + Math.random() * 9000);
+      const orderNumber = "AIPOS-" + Math.floor(1000 + Math.random() * 9000);
       document.getElementById("orderNumber").textContent =
         "Order #" + orderNumber;
 
@@ -596,16 +596,16 @@
             "dark:bg-green-900/20"
           );
           changeDisplay.classList.add(
-            "text-red-600",
-            "dark:text-red-400",
-            "bg-red-50",
-            "dark:bg-red-900/20"
+            "text-blue-600",
+            "dark:text-blue-400",
+            "bg-blue-50",
+            "dark:bg-blue-900/20"
           );
           bottomChange.classList.remove(
             "text-green-600",
             "dark:text-green-400"
           );
-          bottomChange.classList.add("text-red-600", "dark:text-red-400");
+          bottomChange.classList.add("text-blue-600", "dark:text-blue-400");
           changeDisplay.innerHTML = `
             <span class="material-symbols-outlined text-[18px]">warning</span>
             <span class="font-bold">Kurang ${formatRupiah(
@@ -615,10 +615,10 @@
           bottomChange.textContent = `Kurang ${formatRupiah(Math.abs(change))}`;
         } else {
           changeDisplay.classList.remove(
-            "text-red-600",
-            "dark:text-red-400",
-            "bg-red-50",
-            "dark:bg-red-900/20"
+            "text-blue-600",
+            "dark:text-blue-400",
+            "bg-blue-50",
+            "dark:bg-blue-900/20"
           );
           changeDisplay.classList.add(
             "text-green-600",
@@ -626,7 +626,7 @@
             "bg-green-50",
             "dark:bg-green-900/20"
           );
-          bottomChange.classList.remove("text-red-600", "dark:text-red-400");
+          bottomChange.classList.remove("text-blue-600", "dark:text-blue-400");
           bottomChange.classList.add("text-green-600", "dark:text-green-400");
         }
       }
@@ -698,3 +698,5 @@
     </script>
   </body>
 </html>
+
+

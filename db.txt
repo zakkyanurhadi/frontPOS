@@ -1,5 +1,5 @@
 -- =============================================================================
--- RST POS - DATABASE SCHEMA (v2.2)
+-- AIPOS - DATABASE SCHEMA (v2.2)
 -- =============================================================================
 -- Diperbarui: 27 Januari 2026
 -- Berdasarkan analisis prototype frontend POS dengan fitur:
@@ -254,7 +254,7 @@ CREATE TABLE transaksi (
     toko_id INT NOT NULL,
     shift_id INT NULL COMMENT 'Referensi ke shift kasir',
     user_id INT NOT NULL COMMENT 'Kasir yang memproses',
-    nomor_transaksi VARCHAR(50) NOT NULL UNIQUE COMMENT 'Format: TRX-XXXX, RST-XXXX',
+    nomor_transaksi VARCHAR(50) NOT NULL UNIQUE COMMENT 'Format: TRX-XXXX, AIPOS-XXXX',
     tanggal_transaksi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     subtotal DECIMAL(15, 2) NOT NULL DEFAULT 0,
     diskon_persen DECIMAL(5, 2) DEFAULT 0,
@@ -777,7 +777,7 @@ DELIMITER ;
 -- 1. Semua harga menggunakan DECIMAL(15,2) untuk akurasi mata uang
 -- 2. Timestamp menggunakan timezone server
 -- 3. Password harus di-hash sebelum disimpan (gunakan bcrypt)
--- 4. Nomor transaksi di-generate dengan format: TRX-XXXX atau RST-XXXX
+-- 4. Nomor transaksi di-generate dengan format: TRX-XXXX atau AIPOS-XXXX
 -- 5. Soft delete bisa diimplementasikan dengan menambahkan kolom deleted_at
 -- 6. Untuk multi-tenant/multi-cabang sudah didukung dengan relasi toko
 -- 7. Fitur "Shared Store" ditandai dengan is_shared=TRUE di pengguna_toko
@@ -819,7 +819,7 @@ DELIMITER ;
 -- Arsitektur: Feature-First + Clean Architecture (untuk fitur core)
 -- Pembagian Tim: Tech Lead, UI/UX Dev, DEV 1-8
 -- 
--- rst_pos/
+-- aipos_pos/
 -- ├── lib/
 -- │   │
 -- │   ├── main.dart                         -- Entry point
@@ -1053,4 +1053,6 @@ DELIMITER ;
 --   material_symbols_icons: ^4.2719.3
 -- 
 -- =============================================================================
+
+
 

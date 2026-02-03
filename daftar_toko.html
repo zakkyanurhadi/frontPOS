@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Daftar Toko - RST POS</title>
+    <title>Daftar Toko - AIPOS</title>
     <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
@@ -27,7 +27,7 @@
         theme: {
           extend: {
             colors: {
-              primary: "#800000",
+              primary: "#2563ea",
               "primary-hover": "#600000",
               secondary: "#333333",
               "background-light": "#F2F2F7" /* iOS grouped background style */,
@@ -453,8 +453,8 @@
     <script>
       // Check if profile needs to be completed (runs once after registration)
       function checkProfilStatus() {
-        const profilCompleted = localStorage.getItem("rst_profil_completed");
-        const isNewUser = localStorage.getItem("rst_new_registration");
+        const profilCompleted = localStorage.getItem("aipos_profil_completed");
+        const isNewUser = localStorage.getItem("aipos_new_registration");
 
         // Show modal only if:
         // 1. User just registered (flag exists)
@@ -467,9 +467,9 @@
 
       function populateUserData() {
         // Get user data from localStorage (set during registration)
-        const userName = localStorage.getItem("rst_user_name") || "User";
+        const userName = localStorage.getItem("aipos_user_name") || "User";
         const userEmail =
-          localStorage.getItem("rst_user_email") || "user@example.com";
+          localStorage.getItem("aipos_user_email") || "user@example.com";
 
         // Populate the modal fields
         document.getElementById("inputNama").value = userName;
@@ -510,11 +510,11 @@
         }
 
         // Save to localStorage (in real app, this would be API call)
-        localStorage.setItem("rst_profil_completed", "true");
-        localStorage.setItem("rst_user_phone", phone);
+        localStorage.setItem("aipos_profil_completed", "true");
+        localStorage.setItem("aipos_user_phone", phone);
 
         // Remove new registration flag
-        localStorage.removeItem("rst_new_registration");
+        localStorage.removeItem("aipos_new_registration");
 
         alert("Profil berhasil disimpan!");
         hideModalLengkapiProfil();
@@ -529,8 +529,8 @@
           )
         ) {
           // Mark as skipped but not completed - won't show again this session
-          localStorage.setItem("rst_profil_completed", "true");
-          localStorage.removeItem("rst_new_registration");
+          localStorage.setItem("aipos_profil_completed", "true");
+          localStorage.removeItem("aipos_new_registration");
           hideModalLengkapiProfil();
         }
       }
@@ -539,7 +539,9 @@
       document.addEventListener("DOMContentLoaded", checkProfilStatus);
 
       // For testing: Uncomment line below to simulate new registration
-      // localStorage.setItem('rst_new_registration', 'true'); localStorage.removeItem('rst_profil_completed'); localStorage.setItem('rst_user_name', 'Budi Santoso'); localStorage.setItem('rst_user_email', 'budi@example.com');
+      // localStorage.setItem('aipos_new_registration', 'true'); localStorage.removeItem('aipos_profil_completed'); localStorage.setItem('aipos_user_name', 'Budi Santoso'); localStorage.setItem('aipos_user_email', 'budi@example.com');
     </script>
   </body>
 </html>
+
+

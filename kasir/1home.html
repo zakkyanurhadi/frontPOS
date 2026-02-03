@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Dashboard Home - RST POS</title>
+    <title>Dashboard Home - AIPOS</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
@@ -19,9 +19,9 @@
         theme: {
           extend: {
             colors: {
-              primary: "#800000",
-              "primary-dark": "#5e0000",
-              brand: "#800000", // Maroon for Brand Identity
+              primary: "#2563ea",
+              "primary-dark": "#1e40af",
+              brand: "#2563ea", // Maroon for Brand Identity
               "brand-dark": "#333333", // Secondary Brand Color
               "background-light": "#f8f6f6",
               "background-dark": "#221010",
@@ -94,7 +94,7 @@
                 >Selamat Datang,</span
               >
               <h2
-                class="text-brand dark:text-red-400 text-xl font-bold leading-tight tracking-tight"
+                class="text-brand dark:text-blue-400 text-xl font-bold leading-tight tracking-tight"
               >
                 Warung Berkah
               </h2>
@@ -116,7 +116,7 @@
       </header>
       <section class="px-4 pt-6 space-y-4">
         <div
-          class="relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-primary shadow-lg shadow-red-900/20 text-white p-6"
+          class="relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-brand to-primary shadow-lg shadow-blue-900/20 text-white p-6"
         >
           <div
             class="absolute -top-12 -right-12 size-40 rounded-full bg-white/10 blur-2xl"
@@ -207,7 +207,7 @@
           >
             <div class="relative z-10 flex flex-col items-start text-left">
               <span class="text-base font-bold text-white">Buat Transaksi</span>
-              <span class="text-xs text-red-100 opacity-90">Kasir Baru</span>
+              <span class="text-xs text-blue-100 opacity-90">Kasir Baru</span>
             </div>
             <div
               class="relative z-10 flex size-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm group-hover:bg-white group-hover:text-primary transition-colors"
@@ -224,7 +224,7 @@
             class="col-span-2 flex flex-col items-center justify-center gap-2 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition-colors"
           >
             <div
-              class="flex size-10 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400"
+              class="flex size-10 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
             >
               <span class="material-symbols-outlined">power_settings_new</span>
             </div>
@@ -286,7 +286,7 @@
         ) {
           // Simulasi close app - dalam implementasi nyata ini akan memanggil native app close
           alert(
-            "Shift berhasil ditutup.\nTerima kasih telah menggunakan RST POS!",
+            "Shift berhasil ditutup.\nTerima kasih telah menggunakan AIPOS!",
           );
           // Untuk web, redirect ke halaman daftar toko
           // Untuk native app (seperti dengan Capacitor/Cordova), gunakan: navigator.app.exitApp()
@@ -296,3 +296,4 @@
     </script>
   </body>
 </html>
+
